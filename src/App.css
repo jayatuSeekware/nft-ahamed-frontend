@@ -36,3 +36,78 @@
     transform: rotate(360deg);
   }
 }
+/* Custom css------------------ */
+
+
+.assetarea {
+  margin-top: 50px;
+}
+
+.assetfield {
+  display: inline-block;
+  margin: 10px 20px;
+  border: 1px solid;
+  box-shadow: 5px 10px 8px #888888;
+  padding: 5px;
+}
+.assetfield img {
+  border: 1px solid black;
+}
+.assetfield p {
+  padding: 5px;
+}
+.generatenftarea {
+  margin: 20px auto;
+}
+.generatenftarea label {
+  margin-right: 10px;
+}
+
+.generatenftarea table tr td {
+  /* background: red; */
+  padding: 16px;
+}
+.generatenftarea table tr td input {
+  padding: 5px;
+  width: 300px;
+}
+.generatenftarea table {
+  margin: auto;
+}
+.generatenftarea button {
+  padding: 10px;
+}
+.imagesection img {
+  max-width: 800px;
+  height: auto;
+}
+.singlemodaldetail {
+  display: flex;
+}
+.imagesection {
+  
+  padding: 10px;
+}
+.detailsection {
+  padding: 20px 0;
+  width: 300px;
+  padding-left: 25px;
+}
+.bidsection {
+  margin-top: 10%;
+  text-align: center;
+}
+.bidsection button {
+  padding: 10px;
+  font-size: 20px;
+}
+button.closemodal {
+  padding: 10px;
+  font-size: 18px;
+  position: absolute;
+  top: 7px;
+  right: 7px;
+}
+.ReactModal__Overlay.ReactModal__Overlay--after-open {
+  background-color: rgba(0, 0, 0, 0.5)!important;
+}
