@@ -21,7 +21,7 @@ class App extends React.Component {
       price: "",
       description: "",
       tokenId: "",
-      dataList:[]
+      dataList: []
     };
   }
 
@@ -29,6 +29,7 @@ class App extends React.Component {
     await this.loadWeb3();
     await this.loadBlockchainData();
     await this.getlist()
+    await this.getAllData()
   };
 
   getlist = async () => {
@@ -40,14 +41,21 @@ class App extends React.Component {
     })
   }
 
+  getAllData = async () => {
+    axios.get('http://localhost:3000/users/getalldata').then((listdata) => {
+      console.log("====", listdata.data.data)
+      this.setState({ dataList: listdata.data.data })
+    }).catch((errs) => {
+      console.log(errs)
+    })
+  }
+
 
   loadBlockchainData = async () => {
     const web3 = window.web3
     // Load account
     const accounts = await web3.eth.getAccounts()
     this.setState({ account: accounts[0] })
-
-
     const abi = asset
     const contract = new web3.eth.Contract(abi, contractAddress)
     this.setState({ contract })
@@ -94,7 +102,7 @@ class App extends React.Component {
 
 
     console.log("=====tokenid==", this.state.tokenId)
-    this.state.contract.methods.mint(this.state.assetName,this.state.tokenId).send({ from: this.state.account })
+    this.state.contract.methods.mint(this.state.assetName, this.state.tokenId).send({ from: this.state.account })
       .once('receipt', (receipt) => {
 
         const data = new FormData()
@@ -102,21 +110,20 @@ class App extends React.Component {
           'artImage',
           this.state.selectedFile
         );
-        data.append("assetName",this.state.assetName);
+        data.append("assetName", this.state.assetName);
         data.append("price", this.state.price);
         data.append("description", this.state.description);
-        data.append("owner",this.state.account);
-        data.append("tokenId",this.state.tokenId)
-        console.log("========",this.state.assetName,this.state.price, this.state.selectedFile, this.state.description,this.state.account,this.state.tokenId )
+        data.append("owner", this.state.account);
+        data.append("tokenId", this.state.tokenId)
+        console.log("========", this.state.assetName, this.state.price, this.state.selectedFile, this.state.description, this.state.account, this.state.tokenId)
         let url = "http://localhost:3000/users/uploadImage";
         const config = {
           headers: { 'content-type': 'multipart/form-data' }
         }
-    
+
         axios.post(url, data, config)
           .then((result) => {
             console.log("resultData", result);
-            this.setState({dataList:result})
 
           }).catch((errr) => {
             console.log(errr)
@@ -127,7 +134,7 @@ class App extends React.Component {
 
 
 
-  
+
   };
 
   render() {
@@ -148,9 +155,14 @@ class App extends React.Component {
         <input type="text" value={this.state.description} onChange={this.handleDes} /><br></br><br></br>
         <button onClick={this.generateNftToken}> Generate Nft</button>
         <div>
-        {this.state.dataList.map(list => (
-        <p>{list}</p>
-      ))}
+          {this.state.dataList.map(list => (
+            <div>
+              <img style={{height:200,width:200}} src={"http://localhost:3000/" + list.artImage} />
+              <p>{list.assetName}</p>
+              <p>{list.price}</p>
+
+            </div>
+          ))}
         </div>
 
       </div>
