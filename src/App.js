@@ -4,6 +4,9 @@ import asset from "./abis/Assets.json"
 import React, { Component } from 'react';
 import axios from 'axios';
 import Modal from 'react-modal';
+import QRCode from "react-qr-code";
+import { ethers } from "ethers";
+
 require('dotenv').config()
 
 
@@ -22,6 +25,7 @@ const customStyles = {
 
   }
 };
+
 
 var contractAddress = "0xEE33aE7ed6B6A3D0a17334f871AF675FbCA80fb2"
 
@@ -42,7 +46,8 @@ class App extends React.Component {
       showModal: false,
       imageName: "",
       newModel: false,
-      ethadd: ""
+      ethadd: "",
+      transHash: ""
     };
   }
 
@@ -53,6 +58,7 @@ class App extends React.Component {
     await this.getAllData()
   };
 
+  //total no documents in table;
   getlist = async () => {
     axios.get("http://localhost:3000/users/getTokenId").then((resp) => {
       console.log('++++++++', resp)
@@ -62,6 +68,7 @@ class App extends React.Component {
     })
   }
 
+  //List of all data in table;
   getAllData = async () => {
     axios.get('http://localhost:3000/users/getalldata').then((listdata) => {
       console.log("====", listdata.data.data)
@@ -84,8 +91,6 @@ class App extends React.Component {
     this.setState({ totalSupply })
     // Load asset
     console.log("totalsupply&contract", totalSupply, contract)
-
-
   }
 
 
@@ -118,6 +123,10 @@ class App extends React.Component {
     this.setState({ description: event.target.value })
   }
 
+  handleHash = (event) => {
+    this.setState({ transHash: event.target.value })
+  }
+
   openModal = (data) => {
     console.log('shomodal=====', data)
     axios.post('http://localhost:3000/users/getsingledata', { "tokenId": data }).then((respo) => {
@@ -128,12 +137,9 @@ class App extends React.Component {
         description: respo.data.data.description
       })
       console.log("singledatadetails", respo.data.data.assetName)
-
-
     }).catch((er) => {
       console.log('er', er)
     })
-
     this.setState({ showModal: true })
   }
 
@@ -143,7 +149,6 @@ class App extends React.Component {
 
   etherAddress = () => {
     const ethaddress = process.env.REACT_APP_PUBLIC_KEY
-    console.log("address", ethaddress)
     this.setState({ ethadd: ethaddress, newModel: true })
   }
 
@@ -151,19 +156,55 @@ class App extends React.Component {
     this.setState({ newModel: false })
   }
 
+  paymentMethod = () => {
+    var txhash = this.state.transHash;
+    console.log("hash", txhash);
+    const provider = new ethers.providers.JsonRpcProvider('https://rinkeby.infura.io/v3/f99366737d854f5e91ab29dad087fcd5');
+
+    // const privatekey = process.env.REACT_APP_PRIVATE_KEY
+    // let wallet = new ethers.Wallet(privatekey, provider)
+    // let transaction = {
+    //   to: this.state.ethadd,
+    //   value: ethers.utils.parseEther(this.state.price.toString())
+    // };
+    // // Send the transaction
+    // wallet.sendTransaction(transaction).then((tx) => {
+    //   console.log("transectionpromise", tx);
+    // }).catch((err)=>{
+    //   console.log('error',err)
+    // })
+
+    provider.getTransaction(txhash).then(function (transaction) {
+      console.log("transdetails", transaction.from, transaction.to);
+      let paidprice = transaction.value.toString() / 1E18;
+      let sendtoadd = transaction.to;
+      let sendfromadd = transaction.from;
+      if (this.state.price !== paidprice) {
+        alert("Please pay required amount.")
+      } else if (sendtoadd !== this.state.ethadd) {
+        alert("please pay to correct address")
+      } else {
+             console.log("else case")
+      }
+
+
+
+    });
+    provider.getTransactionReceipt(txhash).then(function (transactionReceipt) {
+      // console.log("transreceipt",transactionReceipt);
+    });
+
+  }
+
+
+
 
   generateNftToken = () => {
-
-
     console.log("=====tokenid==", this.state.tokenId)
     this.state.contract.methods.mint(this.state.assetName, this.state.tokenId).send({ from: this.state.account })
       .once('receipt', (receipt) => {
-
         const data = new FormData()
-        data.append(
-          'artImage',
-          this.state.selectedFile
-        );
+        data.append('artImage', this.state.selectedFile);
         data.append("assetName", this.state.assetName);
         data.append("price", this.state.price);
         data.append("description", this.state.description);
@@ -174,25 +215,17 @@ class App extends React.Component {
         const config = {
           headers: { 'content-type': 'multipart/form-data' }
         }
-
         axios.post(url, data, config)
           .then((result) => {
             console.log("resultData", result);
-
           }).catch((errr) => {
             console.log(errr)
           })
-
         console.log("receipt", receipt)
       })
-
-
-
-
   };
 
   render() {
-
     return (
       <div style={{ textAlign: "center" }}>
         <div className="generatenftarea">
@@ -269,12 +302,19 @@ class App extends React.Component {
           ariaHideApp={false}
         >
 
-          <div className="singlemodaldetail">
-            <div className="detailsection">
-              <h1>Ether Address</h1>
+          <div className="paymentmodal">
+            <div className="paysection">
+              <h1>Etherium Address</h1>
+              <div className="qrcode-area">
+                <QRCode value={this.state.ethadd} />
+              </div>
               <p>{this.state.ethadd}</p>
+              <p>Amount To Pay: {this.state.price}ETH</p>
+              <p>Enter Your Transection Hash</p>
+              <input type="text" placeholder="Transection Hash" onChange={this.handleHash}></input>
+
               <div className="bidsection">
-                <button >Buy</button>
+                <button onClick={this.paymentMethod}>I Have Paid</button>
               </div>
             </div>
           </div>
