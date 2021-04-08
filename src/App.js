@@ -23,12 +23,7 @@ const customStyles = {
   }
 };
 
-
-
-
-var contractAddress = "0x40a3f523695A8392048B74CbE0547C3e0b7C2250"
-
-
+var contractAddress = "0xC570D379DF6A90875a029E738D094585475002dA"
 
 class App extends React.Component {
   constructor(props) {
@@ -242,36 +237,27 @@ class App extends React.Component {
                 this.setState({ loader: false })
                 window.location.reload();
 
-  
+
                 console.log("resultData", result);
               }).catch((errr) => {
                 console.log(errr)
                 this.setState({ loader: false })
-                // window.setTimeout(()=>{window.location.reload()},2000)
               })
             console.log("receipt", receipt)
           }).catch((errror) => {
             console.log("metamask", errror)
             this.setState({ loader: false })
-  
-  
           })
-  
       }).catch((errrs) => {
         console.log("api", errrs)
         this.setState({ loader: false })
-  
       })
-  
-
     }
-    
   };
 
   render() {
     return (
       <div style={{ textAlign: "center" }}>
-
 
         {this.state.loader ? (<Loading loading background="#ffffff00" loaderColor="#3498db" />) : (
 
@@ -310,7 +296,7 @@ class App extends React.Component {
                 list.soldStatus === "1" ? (
 
                   <div className="assetfield"  >
-                    <img style={{ height: 200, width: 200 }} src={"http://localhost:3000/" + list.artImage} />
+                    <img style={{ height: 200, width: 200 }} src={"http://104.236.71.88:3000/" + list.artImage} />
                     <p>Name: {list.assetName}</p>
                     <p>Price: {list.price}</p>
                     <p>Status:Sold</p>
@@ -318,7 +304,7 @@ class App extends React.Component {
                   </div>
                 ) : (
                     <div className="assetfield" onClick={() => this.openModal(list.tokenId)} >
-                      <img style={{ height: 200, width: 200 }} src={"http://localhost:3000/" + list.artImage} />
+                      <img style={{ height: 200, width: 200 }} src={"http://104.236.71.88:3000/" + list.artImage} />
                       <p>Name: {list.assetName}</p>
                       <p>Price: {list.price}</p>
                       <p>Status:Not sold</p>
@@ -335,7 +321,7 @@ class App extends React.Component {
 
 
 
-        {/* ======modal======== */}
+        {/* ======modal1======== */}
         <Modal
           isOpen={this.state.showModal}
           style={customStyles}
@@ -345,7 +331,7 @@ class App extends React.Component {
 
           <div className="singlemodaldetail">
             <div className="imagesection">
-              <img src={"http://localhost:3000/" + this.state.imageName} />
+              <img src={"http://104.236.71.88:3000/" + this.state.imageName} />
             </div>
             <div className="detailsection">
               <h1>{this.state.assetName}</h1>
@@ -359,10 +345,8 @@ class App extends React.Component {
 
           <button className="closemodal" onClick={this.closeModal}>X</button>
 
-
         </Modal>
-
-
+        {/* modalsecond */}
         <Modal
           isOpen={this.state.newModel}
           style={customStyles}
@@ -388,13 +372,8 @@ class App extends React.Component {
           </div>
 
           <button className="closemodal" onClick={this.closeModalNew}>X</button>
-
-
         </Modal>
-
-
       </div>
-
     )
   }
 }
