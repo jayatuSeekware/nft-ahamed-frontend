@@ -6,12 +6,9 @@ import axios from 'axios';
 import Modal from 'react-modal';
 import QRCode from "react-qr-code";
 import { ethers } from "ethers";
-
+import Loading from 'react-fullscreen-loading';
+import api from './api'
 require('dotenv').config()
-
-
-
-
 
 
 const customStyles = {
@@ -27,11 +24,14 @@ const customStyles = {
 };
 
 
-var contractAddress = "0xEE33aE7ed6B6A3D0a17334f871AF675FbCA80fb2"
+
+
+var contractAddress = "0x207B7A1E48fC6797235F6D89096606D8B9b7F8f9"
 
 
 
 class App extends React.Component {
+
 
   constructor(props) {
     super(props);
@@ -47,32 +47,26 @@ class App extends React.Component {
       imageName: "",
       newModel: false,
       ethadd: "",
-      transHash: ""
+      transHash: "",
+      soldstatus: "",
+      visible: false,
+      loader: false
     };
   }
 
   async componentWillMount() {
     await this.loadWeb3();
     await this.loadBlockchainData();
-    await this.getlist()
     await this.getAllData()
   };
 
-  //total no documents in table;
-  getlist = async () => {
-    axios.get("http://localhost:3000/users/getTokenId").then((resp) => {
-      console.log('++++++++', resp)
-      this.setState({ tokenId: resp.data.data })
-    }).catch((errrs) => {
-      console.log(errrs)
-    })
-  }
+
 
   //List of all data in table;
   getAllData = async () => {
-    axios.get('http://localhost:3000/users/getalldata').then((listdata) => {
+    axios.get(api.API_URL + 'getalldata').then((listdata) => {
       console.log("====", listdata.data.data)
-      this.setState({ dataList: listdata.data.data })
+      this.setState({ dataList: listdata.data.data, soldstatus: listdata.data.data.soldStatus })
     }).catch((errs) => {
       console.log(errs)
     })
@@ -129,7 +123,8 @@ class App extends React.Component {
 
   openModal = (data) => {
     console.log('shomodal=====', data)
-    axios.post('http://localhost:3000/users/getsingledata', { "tokenId": data }).then((respo) => {
+    this.setState({ tokenId: data })
+    axios.post(api.API_URL + 'getsingledata', { "tokenId": data }).then((respo) => {
       this.setState({
         imageName: respo.data.data.artImage,
         price: respo.data.data.price,
@@ -148,7 +143,7 @@ class App extends React.Component {
   }
 
   etherAddress = () => {
-    const ethaddress = process.env.REACT_APP_PUBLIC_KEY
+    const ethaddress = "0x93b8d57D2CECdC0Fd485CFCD7fB965D575445DcB"
     this.setState({ ethadd: ethaddress, newModel: true })
   }
 
@@ -157,42 +152,58 @@ class App extends React.Component {
   }
 
   paymentMethod = () => {
+    let assetname = this.state.assetName
     var txhash = this.state.transHash;
-    console.log("hash", txhash);
+    var payamout = this.state.price;
+    var payaddr = this.state.ethadd;
+    var tokenid = this.state.tokenId;
+    console.log(txhash, "hash=======================", tokenid);
     const provider = new ethers.providers.JsonRpcProvider('https://rinkeby.infura.io/v3/f99366737d854f5e91ab29dad087fcd5');
+    this.setState({ loader: true })
 
-    // const privatekey = process.env.REACT_APP_PRIVATE_KEY
-    // let wallet = new ethers.Wallet(privatekey, provider)
-    // let transaction = {
-    //   to: this.state.ethadd,
-    //   value: ethers.utils.parseEther(this.state.price.toString())
-    // };
-    // // Send the transaction
-    // wallet.sendTransaction(transaction).then((tx) => {
-    //   console.log("transectionpromise", tx);
-    // }).catch((err)=>{
-    //   console.log('error',err)
-    // })
 
-    provider.getTransaction(txhash).then(function (transaction) {
+    if (txhash === "" || txhash === null) {
+      return alert("Enter your transaction hash.")
+    }
+
+    provider.getTransaction(txhash).then((transaction) => {
       console.log("transdetails", transaction.from, transaction.to);
       let paidprice = transaction.value.toString() / 1E18;
       let sendtoadd = transaction.to;
-      let sendfromadd = transaction.from;
-      if (this.state.price !== paidprice) {
+      if (payamout !== paidprice) {
         alert("Please pay required amount.")
-      } else if (sendtoadd !== this.state.ethadd) {
+        this.setState({ loader: false })
+
+      } else if (payaddr !== sendtoadd) {
         alert("please pay to correct address")
+        this.setState({ loader: false })
+
       } else {
-             console.log("else case")
+        axios.post(api.API_URL + 'paymentdetail', {
+          "assetName": assetname,
+          "tokenId": tokenid,
+          "newOwnerAddrs": payaddr,
+          "boughtTokenHash": txhash,
+          "tokenPrice": payamout,
+        }).then((datas) => {
+          console.log('datas', datas)
+          if (datas.data.status) {
+            this.setState({ newModel: false, showModal: false })
+            if (!alert('Transfering success')) { window.location.reload(); }
+          } else {
+            alert("Tranfering failed.")
+            this.setState({ loader: false })
+
+          }
+        }).catch((errss) => {
+          console.log('++++++++catchblock', errss)
+          this.setState({ loader: false })
+
+        })
+
       }
-
-
-
     });
-    provider.getTransactionReceipt(txhash).then(function (transactionReceipt) {
-      // console.log("transreceipt",transactionReceipt);
-    });
+
 
   }
 
@@ -200,72 +211,131 @@ class App extends React.Component {
 
 
   generateNftToken = () => {
-    console.log("=====tokenid==", this.state.tokenId)
-    this.state.contract.methods.mint(this.state.assetName, this.state.tokenId).send({ from: this.state.account })
-      .once('receipt', (receipt) => {
-        const data = new FormData()
-        data.append('artImage', this.state.selectedFile);
-        data.append("assetName", this.state.assetName);
-        data.append("price", this.state.price);
-        data.append("description", this.state.description);
-        data.append("owner", this.state.account);
-        data.append("tokenId", this.state.tokenId)
-        console.log("========", this.state.assetName, this.state.price, this.state.selectedFile, this.state.description, this.state.account, this.state.tokenId)
-        let url = "http://localhost:3000/users/uploadImage";
-        const config = {
-          headers: { 'content-type': 'multipart/form-data' }
-        }
-        axios.post(url, data, config)
-          .then((result) => {
-            console.log("resultData", result);
-          }).catch((errr) => {
-            console.log(errr)
+    if (this.state.assetName === "" || this.state.assetName === null) {
+      return alert("Enter your asset name")
+    } else if (this.state.price === "" || this.state.price === null) {
+      return alert("Enter your pay amount")
+    } else if (this.state.selectedFile === "" || this.state.selectedFile === null) {
+      return alert("please select your assets image")
+    } else if (this.state.description === "" || this.state.description === null) {
+      return alert("Enter description")
+    } else {
+
+      axios.get(api.API_URL + "getTokenId").then((resp) => {
+        console.log('++++++++api=====url', resp)
+        var tokenId = resp.data.data
+        this.setState({ loader: true })
+        this.state.contract.methods.mint(this.state.assetName, tokenId).send({ from: this.state.account })
+          .once('receipt', (receipt) => {
+            const data = new FormData()
+            data.append('artImage', this.state.selectedFile);
+            data.append("assetName", this.state.assetName);
+            data.append("price", this.state.price);
+            data.append("description", this.state.description);
+            data.append("owner", this.state.account);
+            data.append("tokenId", tokenId)
+            console.log("========", this.state.assetName, this.state.price, this.state.selectedFile, this.state.description, this.state.account, tokenId)
+            let url = api.API_URL + "uploadImage";
+            const config = {
+              headers: { 'content-type': 'multipart/form-data' }
+            }
+            axios.post(url, data, config)
+              .then((result) => {
+                this.setState({ loader: false })
+                window.location.reload();
+
+  
+                console.log("resultData", result);
+              }).catch((errr) => {
+                console.log(errr)
+                this.setState({ loader: false })
+                // window.setTimeout(()=>{window.location.reload()},2000)
+              })
+            console.log("receipt", receipt)
+          }).catch((errror) => {
+            console.log("metamask", errror)
+            this.setState({ loader: false })
+  
+  
           })
-        console.log("receipt", receipt)
+  
+      }).catch((errrs) => {
+        console.log("api", errrs)
+        this.setState({ loader: false })
+  
       })
+  
+
+    }
+    
   };
 
   render() {
     return (
       <div style={{ textAlign: "center" }}>
-        <div className="generatenftarea">
-          <h1>Nft Assets</h1>
-
-          <table>
-            <tr>
-              <td><label>Asset Name</label></td>
-              <td><input type="text" value={this.state.assetName} onChange={this.handleAssetName} /></td>
-            </tr>
-            <tr>
-              <td><label>Price</label></td>
-              <td><input type="text" value={this.state.price} onChange={this.handlePrice} /></td>
-            </tr>
-            <tr>
-              <td><label>Upload your img</label></td>
-              <td> <input type="file" onChange={this.onFileChange} /></td>
-            </tr>
-            <tr>
-              <td><label>Description</label></td>
-              <td><input type="text" value={this.state.description} onChange={this.handleDes} /></td>
-            </tr>
-            <tr>
-
-            </tr>
-          </table>
-          <button onClick={this.generateNftToken}> Generate Nft</button>
-        </div>
 
 
-        <div className="assetarea">
-          {this.state.dataList.map(list => (
-            <div className="assetfield" onClick={() => this.openModal(list.tokenId)} >
-              <img style={{ height: 200, width: 200 }} src={"http://localhost:3000/" + list.artImage} />
-              <p>Name: {list.assetName}</p>
-              <p>Price: {list.price}</p>
+        {this.state.loader ? (<Loading loading background="#ffffff00" loaderColor="#3498db" />) : (
 
+          <div>
+
+            <div className={'generatenftarea'}>
+              <h1>Nft Assets</h1>
+
+              <table>
+                <tr>
+                  <td><label>Asset Name</label></td>
+                  <td><input type="text" value={this.state.assetName} onChange={this.handleAssetName} /></td>
+                </tr>
+                <tr>
+                  <td><label>Price</label></td>
+                  <td><input type="text" value={this.state.price} onChange={this.handlePrice} /></td>
+                </tr>
+                <tr>
+                  <td><label>Upload your img</label></td>
+                  <td> <input type="file" onChange={this.onFileChange} /></td>
+                </tr>
+                <tr>
+                  <td><label>Description</label></td>
+                  <td><input type="text" value={this.state.description} onChange={this.handleDes} /></td>
+                </tr>
+                <tr>
+
+                </tr>
+              </table>
+              <button onClick={this.generateNftToken}> Generate Nft</button>
             </div>
-          ))}
-        </div>
+
+
+            <div className="assetarea">
+              {this.state.dataList.map(list => (
+                list.soldStatus === "1" ? (
+
+                  <div className="assetfield"  >
+                    <img style={{ height: 200, width: 200 }} src={"http://localhost:3000/" + list.artImage} />
+                    <p>Name: {list.assetName}</p>
+                    <p>Price: {list.price}</p>
+                    <p>Status:Sold</p>
+
+                  </div>
+                ) : (
+                    <div className="assetfield" onClick={() => this.openModal(list.tokenId)} >
+                      <img style={{ height: 200, width: 200 }} src={"http://localhost:3000/" + list.artImage} />
+                      <p>Name: {list.assetName}</p>
+                      <p>Price: {list.price}</p>
+                      <p>Status:Not sold</p>
+
+                    </div>
+                  )
+              ))}
+            </div>
+
+          </div>
+
+        )}
+
+
+
 
         {/* ======modal======== */}
         <Modal
@@ -304,7 +374,7 @@ class App extends React.Component {
 
           <div className="paymentmodal">
             <div className="paysection">
-              <h1>Etherium Address</h1>
+              <h1>Ethereum Address</h1>
               <div className="qrcode-area">
                 <QRCode value={this.state.ethadd} />
               </div>
@@ -325,8 +395,8 @@ class App extends React.Component {
         </Modal>
 
 
-
       </div>
+
     )
   }
 }
