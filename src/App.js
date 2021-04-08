@@ -26,13 +26,11 @@ const customStyles = {
 
 
 
-var contractAddress = "0x207B7A1E48fC6797235F6D89096606D8B9b7F8f9"
+var contractAddress = "0x40a3f523695A8392048B74CbE0547C3e0b7C2250"
 
 
 
 class App extends React.Component {
-
-
   constructor(props) {
     super(props);
     this.state = {
