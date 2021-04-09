@@ -28,7 +28,7 @@ const customStyles = {
   }
 };
 
-var contractAddress = "0xB3fcAbf0Be7003C750Ba8ba9B1Cd8880ef026f87"
+var contractAddress = "0xF421cFcEA20c74d0f4269cF62EF79Ec30F48f8CB"
 
 class App extends React.Component {
   constructor(props) {
@@ -48,7 +48,8 @@ class App extends React.Component {
       transHash: "",
       soldstatus: "",
       visible: false,
-      loader: false
+      loader: false,
+      ipfsHash:""
     };
   }
 
@@ -209,6 +210,7 @@ class App extends React.Component {
 
 
   generateNftToken = () => {
+    this.uploadImage();
     if (this.state.assetName === "" || this.state.assetName === null) {
       return alert("Enter your asset name")
     } else if (this.state.price === "" || this.state.price === null) {
@@ -232,7 +234,7 @@ class App extends React.Component {
             data.append("description", this.state.description);
             data.append("owner", this.state.account);
             data.append("tokenId", tokenId)
-            console.log("========", this.state.assetName, this.state.price, this.state.selectedFile, this.state.description, this.state.account, tokenId)
+            console.log("========", this.state.ipfsHash)
             let url = api.API_URL + "uploadImage";
             const config = {
               headers: { 'content-type': 'multipart/form-data' }
@@ -279,7 +281,7 @@ class App extends React.Component {
       console.log("buddfe",buffer);
 
       await ipfs.add(buffer, (err, ipfsHash) => {
-        console.log(err,ipfsHash[0].hash);
+        console.log("imagehash&err",err,ipfsHash[0].hash);
         //setState by setting ipfsHash to ipfsHash[0].hash 
         this.setState({ ipfsHash:ipfsHash[0].hash });
       })
@@ -318,7 +320,6 @@ class App extends React.Component {
                 </tr>
               </table>
               <button onClick={this.generateNftToken}> Generate Nft</button>
-              <button onClick={this.uploadImage}>imageupload</button>
             </div>
 
 
@@ -327,7 +328,7 @@ class App extends React.Component {
                 list.soldStatus === "1" ? (
 
                   <div className="assetfield"  >
-                    <img style={{ height: 200, width: 200 }} src={"http://104.236.71.88:3000/" + list.artImage} />
+                    <img style={{ height: 200, width: 200 }} src={"http://localhost:3000/" + list.artImage} />
                     <p>Name: {list.assetName}</p>
                     <p>Price: {list.price}</p>
                     <p>Status:Sold</p>
@@ -335,7 +336,7 @@ class App extends React.Component {
                   </div>
                 ) : (
                     <div className="assetfield" onClick={() => this.openModal(list.tokenId)} >
-                      <img style={{ height: 200, width: 200 }} src={"http://104.236.71.88:3000/" + list.artImage} />
+                      <img style={{ height: 200, width: 200 }} src={"http://localhost:3000/" + list.artImage} />
                       <p>Name: {list.assetName}</p>
                       <p>Price: {list.price}</p>
                       <p>Status:Not sold</p>
@@ -362,7 +363,7 @@ class App extends React.Component {
 
           <div className="singlemodaldetail">
             <div className="imagesection">
-              <img src={"http://104.236.71.88:3000/" + this.state.imageName} />
+              <img src={"http://localhost:3000/" + this.state.imageName} />
             </div>
             <div className="detailsection">
               <h1>{this.state.assetName}</h1>
