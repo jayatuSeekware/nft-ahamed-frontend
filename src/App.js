@@ -8,7 +8,12 @@ import QRCode from "react-qr-code";
 import { ethers } from "ethers";
 import Loading from 'react-fullscreen-loading';
 import api from './api'
+
+const IPFS = require('ipfs-api');
+const ipfs = new IPFS({ host: 'ipfs.infura.io', port: 5001, protocol: 'https'});
+
 require('dotenv').config()
+
 
 
 const customStyles = {
@@ -255,6 +260,31 @@ class App extends React.Component {
     }
   };
 
+  uploadImage= async ()=>{
+    console.log("clicked buton")
+
+    var file = this.state.selectedFile
+    let reader = new window.FileReader()
+    reader.readAsArrayBuffer(file)
+    reader.onloadend = () => this.convertToBuffer(reader)
+
+
+  }
+
+  convertToBuffer = async(reader) => {
+    //file is converted to a buffer for upload to IPFS
+      const buffer = await Buffer.from(reader.result);
+    //set this buffer -using es6 syntax
+      this.setState({buffer});
+      console.log("buddfe",buffer);
+
+      await ipfs.add(buffer, (err, ipfsHash) => {
+        console.log(err,ipfsHash[0].hash);
+        //setState by setting ipfsHash to ipfsHash[0].hash 
+        this.setState({ ipfsHash:ipfsHash[0].hash });
+      })
+  };
+
   render() {
     return (
       <div style={{ textAlign: "center" }}>
@@ -288,6 +318,7 @@ class App extends React.Component {
                 </tr>
               </table>
               <button onClick={this.generateNftToken}> Generate Nft</button>
+              <button onClick={this.uploadImage}>imageupload</button>
             </div>
 
 
