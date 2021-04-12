@@ -45,16 +45,44 @@
 
 .assetfield {
   display: inline-block;
-  margin: 10px 20px;
-  border: 1px solid;
-  box-shadow: 5px 10px 8px #888888;
-  padding: 5px;
+    padding: 18px 22px;
+    border: 1px solid rgba(4, 4, 5, 0.1);
+    border-radius: 10px;
+    background: rgb(255, 255, 255);
+    width: 270px;
+    margin-bottom: 20px;
+
 }
-.assetfield img {
-  border: 1px solid black;
+.assetimage {
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-flex: 1;
+  flex-grow: 1;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  justify-content: center;
+  margin-top: 16px;
 }
+.assetdetail {
+  margin-top: 15px;
+  text-align: left;
+  padding-left: 26px;
+}
+
 .assetfield p {
   padding: 5px;
+  margin: 0;
+}
+p.assetstatus {
+  font-weight: bold;
+  color: rgb(0, 163, 255);
+}
+h3.assetname {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 100%;
 }
 .generatenftarea {
   margin: 20px auto;
@@ -81,26 +109,36 @@
   max-width: 800px;
   max-height: 400px;
 }
+
 .singlemodaldetail {
-  display: flex;
+  padding-top: 20px;
 }
+
 .imagesection {
-  
-  padding: 10px;
+  padding: 20%;
+  border: 2px solid #f1f1f1;
+  height: 80vh;
 }
+.imagesection img {
+  max-width: 400px;
+  max-height: 200px;
+}
+.sidedetail h2 {
+  margin-bottom: 30px;
+}
+
 .detailsection {
-  padding: 20px 0;
-  width: 300px;
-  padding-left: 25px;
+  text-align: left;
+  height: 100%;
+  padding: 30px;
+  border: 2px solid #f1f1f1;
+  height: 80vh;
 }
-.bidsection {
-  margin-top: 10%;
-  text-align: center;
+.sidedetail {
+  height: 80%;
 }
-.bidsection button {
-  padding: 10px;
-  font-size: 20px;
-}
+
+
 button.closemodal {
   padding: 10px;
   font-size: 18px;
@@ -111,6 +149,7 @@ button.closemodal {
 .ReactModal__Overlay.ReactModal__Overlay--after-open {
   background-color: rgba(0, 0, 0, 0.5)!important;
 }
+
 .qrcode-area {
   text-align: center;
   padding: 10px 20px;
