@@ -244,7 +244,7 @@ class App extends React.Component {
             console.log('++++++++api=====url', resp)
             var tokenId = resp.data.data
             this.setState({ loader: true })
-            this.state.contract.methods.mint(this.state.assetName, tokenId).send({ from: this.state.account })
+            this.state.contract.methods.mint(this.state.assetName, tokenId, this.state.ipfsHash).send({ from: this.state.account })
               .once('receipt', (receipt) => {
                 const data = new FormData()
                 data.append("assetName", this.state.assetName);
