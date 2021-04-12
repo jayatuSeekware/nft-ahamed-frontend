@@ -21,12 +21,16 @@
 		"constant": false,
 		"inputs": [
 			{
-				"name": "_asset",
+				"name": "_assetname",
 				"type": "string"
 			},
 			{
 				"name": "asset_id",
 				"type": "uint256"
+			},
+			{
+				"name": "_assetimage_hash",
+				"type": "string"
 			}
 		],
 		"name": "mint",

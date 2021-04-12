@@ -11,7 +11,7 @@ import api from './api'
 import config from './config'
 
 const IPFS = require('ipfs-api');
-const ipfs = new IPFS({ host: 'ipfs.infura.io', port: 5001, protocol: 'https'});
+const ipfs = new IPFS({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
 
 require('dotenv').config()
 
@@ -50,7 +50,7 @@ class App extends React.Component {
       soldstatus: "",
       visible: false,
       loader: false,
-      ipfsHash:""
+      ipfsHash: ""
     };
   }
 
@@ -74,31 +74,47 @@ class App extends React.Component {
 
 
   loadBlockchainData = async () => {
-    const web3 = window.web3
-    // Load account
-    const accounts = await web3.eth.getAccounts()
-    this.setState({ account: accounts[0] })
-    const abi = asset
-    const contract = new web3.eth.Contract(abi, contractAddress)
-    this.setState({ contract })
-    const totalSupply = await contract.methods.totalSupply().call()
-    this.setState({ totalSupply })
-    // Load asset
-    console.log("totalsupply&contract", totalSupply, contract)
+    try {
+
+      const web3 = window.web3
+      // Load account
+      const accounts = await web3.eth.getAccounts()
+      this.setState({ account: accounts[0] })
+      const abi = asset
+      const contract = new web3.eth.Contract(abi, contractAddress)
+      this.setState({ contract })
+      const totalSupply = await contract.methods.totalSupply().call()
+      this.setState({ totalSupply })
+      // Load asset
+      console.log("totalsupply&contract", totalSupply, contract)
+
+    } catch (err) {
+      alert(err)
+    }
+
   }
 
 
   loadWeb3 = async () => {
-    if (window.ethereum) {
-      window.web3 = new Web3(window.ethereum)
-      await window.ethereum.enable()
+
+    try {
+
+      if (window.ethereum) {
+        window.web3 = new Web3(window.ethereum)
+        await window.ethereum.enable()
+      }
+      else if (window.web3) {
+        window.web3 = new Web3(window.web3.currentProvider)
+      }
+      else {
+        window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
+      }
+    } catch (err) {
+      console.log("errr", err)
+      alert("please install metamask")
     }
-    else if (window.web3) {
-      window.web3 = new Web3(window.web3.currentProvider)
-    }
-    else {
-      window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
-    }
+
+
   };
 
   handleAssetName = (event) => {
@@ -210,7 +226,7 @@ class App extends React.Component {
 
 
   generateNftToken = () => {
-    
+
 
 
     if (this.state.assetName === "" || this.state.assetName === null) {
@@ -223,85 +239,95 @@ class App extends React.Component {
       return alert("Enter description")
     } else {
 
-     
+
+      this.setState({ loader: true })
+
+
       var file = this.state.selectedFile
       let reader = new window.FileReader()
       reader.readAsArrayBuffer(file)
-  
-     
-  
-       reader.onloadend = async () => {
-  
-        console.log("clicked reader",reader)
-        const buffer =  await Buffer.from(reader.result);
-  
-        await ipfs.add(buffer, (err, ipfsHash) => {
-          console.log("imagehash&err",err,ipfsHash[0].hash);
-          //setState by setting ipfsHash to ipfsHash[0].hash 
-          this.setState({ ipfsHash:ipfsHash[0].hash });
 
-          axios.get(api.API_URL + "getTokenId").then((resp) => {
-            console.log('++++++++api=====url', resp)
-            var tokenId = resp.data.data
-            this.setState({ loader: true })
-            this.state.contract.methods.mint(this.state.assetName, tokenId, this.state.ipfsHash).send({ from: this.state.account })
-              .once('receipt', (receipt) => {
-                const data = new FormData()
-                data.append("assetName", this.state.assetName);
-                data.append("price", this.state.price);
-                data.append("description", this.state.description);
-                data.append("owner", this.state.account);
-                data.append("tokenId", tokenId)
-                data.append("ipfsHash",this.state.ipfsHash)
-                console.log("========hashinside", this.state.ipfsHash)
-                let url = api.API_URL + "uploadImage";
-                const config = {
-                  headers: { 'content-type': 'multipart/form-data' }
-                }
-                axios.post(url, data, config)
-                  .then((result) => {
-                    this.setState({ loader: false })
-                    // window.location.reload();
-                    console.log("resultData", result);
-                  }).catch((errr) => {
-                    console.log(errr)
-                    this.setState({ loader: false })
-                  })
-                console.log("receipt", receipt)
-              }).catch((errror) => {
-                console.log("metamask", errror)
-                this.setState({ loader: false })
-              })
-          }).catch((errrs) => {
-            console.log("api", errrs)
-            this.setState({ loader: false })
+      try {
+
+
+
+        reader.onloadend = async () => {
+
+          console.log("clicked reader", reader)
+          const buffer = await Buffer.from(reader.result);
+
+          await ipfs.add(buffer, (err, ipfsHash) => {
+            console.log("imagehash&err", err, ipfsHash[0].hash);
+            //setState by setting ipfsHash to ipfsHash[0].hash 
+            this.setState({ ipfsHash: ipfsHash[0].hash });
+
+            axios.get(api.API_URL + "getTokenId").then((resp) => {
+              console.log('++++++++api=====url', resp)
+              var tokenId = resp.data.data
+              this.state.contract.methods.mint(this.state.assetName, tokenId, this.state.ipfsHash).send({ from: this.state.account })
+                .once('receipt', (receipt) => {
+                  const data = new FormData()
+                  data.append("assetName", this.state.assetName);
+                  data.append("price", this.state.price);
+                  data.append("description", this.state.description);
+                  data.append("owner", this.state.account);
+                  data.append("tokenId", tokenId)
+                  data.append("ipfsHash", this.state.ipfsHash)
+                  console.log("========hashinside", this.state.ipfsHash)
+                  let url = api.API_URL + "uploadImage";
+                  const config = {
+                    headers: { 'content-type': 'multipart/form-data' }
+                  }
+                  axios.post(url, data, config)
+                    .then((result) => {
+                      this.setState({ loader: false })
+                      // window.location.reload();
+                      console.log("resultData", result);
+                    }).catch((errr) => {
+                      console.log(errr)
+                      this.setState({ loader: false })
+                    })
+                  console.log("receipt", receipt)
+                }).catch((errror) => {
+                  console.log("metamask", errror)
+                  this.setState({ loader: false })
+                })
+            }).catch((errrs) => {
+              console.log("api", errrs)
+              this.setState({ loader: false })
+            })
+
+
+
           })
-    
+
+        }
+
+      }
+      catch (exception) {
+        console.log('=====exec', exception)
+        this.setState({ loader: false })
+
+      }
 
 
-        })
-        
-       }
 
-
-     
-
-   }
+    }
   };
 
 
-  convertToBuffer = async(reader) => {
+  convertToBuffer = async (reader) => {
     //file is converted to a buffer for upload to IPFS
-      const buffer = await Buffer.from(reader.result);
+    const buffer = await Buffer.from(reader.result);
     //set this buffer -using es6 syntax
-      this.setState({buffer});
-      console.log("buddfe",buffer);
+    this.setState({ buffer });
+    console.log("buddfe", buffer);
 
-      await ipfs.add(buffer, (err, ipfsHash) => {
-        console.log("imagehash&err",err,ipfsHash[0].hash);
-        //setState by setting ipfsHash to ipfsHash[0].hash 
-        this.setState({ ipfsHash:ipfsHash[0].hash });
-      })
+    await ipfs.add(buffer, (err, ipfsHash) => {
+      console.log("imagehash&err", err, ipfsHash[0].hash);
+      //setState by setting ipfsHash to ipfsHash[0].hash 
+      this.setState({ ipfsHash: ipfsHash[0].hash });
+    })
   };
 
   render() {
@@ -345,21 +371,21 @@ class App extends React.Component {
                 list.soldStatus === "1" ? (
 
                   <div className="assetfield"  >
-                    <img style={{ height: 200, width: 200 }} src={api.IPFS_URL + list.ipfsHash} alt=""/>
+                    <img style={{ height: 200, width: 200 }} src={api.IPFS_URL + list.ipfsHash} alt="" />
                     <p>Name: {list.assetName}</p>
                     <p>Price: {list.price}</p>
                     <p>Status:Sold</p>
 
                   </div>
                 ) : (
-                    <div className="assetfield" onClick={() => this.openModal(list.tokenId)} >
-                      <img style={{ height: 200, width: 200 }} src={api.IPFS_URL + list.ipfsHash} alt=""/>
-                      <p>Name: {list.assetName}</p>
-                      <p>Price: {list.price}</p>
-                      <p>Status:Not sold</p>
+                  <div className="assetfield" onClick={() => this.openModal(list.tokenId)} >
+                    <img style={{ height: 200, width: 200 }} src={api.IPFS_URL + list.ipfsHash} alt="" />
+                    <p>Name: {list.assetName}</p>
+                    <p>Price: {list.price}</p>
+                    <p>Status:Not sold</p>
 
-                    </div>
-                  )
+                  </div>
+                )
               ))}
             </div>
 
@@ -380,7 +406,7 @@ class App extends React.Component {
 
           <div className="singlemodaldetail">
             <div className="imagesection">
-              <img src={"http://localhost:3000/" + this.state.imageName} alt=""/>
+              <img src={"http://localhost:3000/" + this.state.imageName} alt="" />
             </div>
             <div className="detailsection">
               <h1>{this.state.assetName}</h1>
