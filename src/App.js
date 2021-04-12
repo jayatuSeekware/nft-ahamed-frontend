@@ -8,6 +8,7 @@ import QRCode from "react-qr-code";
 import { ethers } from "ethers";
 import Loading from 'react-fullscreen-loading';
 import api from './api'
+import config from './config'
 
 const IPFS = require('ipfs-api');
 const ipfs = new IPFS({ host: 'ipfs.infura.io', port: 5001, protocol: 'https'});
@@ -28,7 +29,7 @@ const customStyles = {
   }
 };
 
-var contractAddress = "0xB3fcAbf0Be7003C750Ba8ba9B1Cd8880ef026f87"
+var contractAddress = config.Contract_address
 
 class App extends React.Component {
   constructor(props) {
@@ -192,7 +193,6 @@ class App extends React.Component {
           } else {
             alert("Tranfering failed.")
             this.setState({ loader: false })
-
           }
         }).catch((errss) => {
           console.log('++++++++catchblock', errss)
@@ -345,7 +345,7 @@ class App extends React.Component {
                 list.soldStatus === "1" ? (
 
                   <div className="assetfield"  >
-                    <img style={{ height: 200, width: 200 }} src={api.IPFS_URL + list.ipfsHash} />
+                    <img style={{ height: 200, width: 200 }} src={api.IPFS_URL + list.ipfsHash} alt=""/>
                     <p>Name: {list.assetName}</p>
                     <p>Price: {list.price}</p>
                     <p>Status:Sold</p>
@@ -353,7 +353,7 @@ class App extends React.Component {
                   </div>
                 ) : (
                     <div className="assetfield" onClick={() => this.openModal(list.tokenId)} >
-                      <img style={{ height: 200, width: 200 }} src={api.IPFS_URL + list.ipfsHash} />
+                      <img style={{ height: 200, width: 200 }} src={api.IPFS_URL + list.ipfsHash} alt=""/>
                       <p>Name: {list.assetName}</p>
                       <p>Price: {list.price}</p>
                       <p>Status:Not sold</p>
@@ -380,7 +380,7 @@ class App extends React.Component {
 
           <div className="singlemodaldetail">
             <div className="imagesection">
-              <img src={"http://localhost:3000/" + this.state.imageName} />
+              <img src={"http://localhost:3000/" + this.state.imageName} alt=""/>
             </div>
             <div className="detailsection">
               <h1>{this.state.assetName}</h1>
