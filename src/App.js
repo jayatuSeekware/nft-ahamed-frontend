@@ -28,7 +28,7 @@ const customStyles = {
   }
 };
 
-var contractAddress = "0xF421cFcEA20c74d0f4269cF62EF79Ec30F48f8CB"
+var contractAddress = "0xB3fcAbf0Be7003C750Ba8ba9B1Cd8880ef026f87"
 
 class App extends React.Component {
   constructor(props) {
@@ -125,7 +125,7 @@ class App extends React.Component {
     this.setState({ tokenId: data })
     axios.post(api.API_URL + 'getsingledata', { "tokenId": data }).then((respo) => {
       this.setState({
-        imageName: respo.data.data.artImage,
+        ipfsHash: respo.data.data.ipfsHash,
         price: respo.data.data.price,
         assetName: respo.data.data.assetName,
         description: respo.data.data.description
@@ -210,7 +210,9 @@ class App extends React.Component {
 
 
   generateNftToken = () => {
-    this.uploadImage();
+    
+
+
     if (this.state.assetName === "" || this.state.assetName === null) {
       return alert("Enter your asset name")
     } else if (this.state.price === "" || this.state.price === null) {
@@ -221,57 +223,72 @@ class App extends React.Component {
       return alert("Enter description")
     } else {
 
-      axios.get(api.API_URL + "getTokenId").then((resp) => {
-        console.log('++++++++api=====url', resp)
-        var tokenId = resp.data.data
-        this.setState({ loader: true })
-        this.state.contract.methods.mint(this.state.assetName, tokenId).send({ from: this.state.account })
-          .once('receipt', (receipt) => {
-            const data = new FormData()
-            data.append('artImage', this.state.selectedFile);
-            data.append("assetName", this.state.assetName);
-            data.append("price", this.state.price);
-            data.append("description", this.state.description);
-            data.append("owner", this.state.account);
-            data.append("tokenId", tokenId)
-            console.log("========", this.state.ipfsHash)
-            let url = api.API_URL + "uploadImage";
-            const config = {
-              headers: { 'content-type': 'multipart/form-data' }
-            }
-            axios.post(url, data, config)
-              .then((result) => {
-                this.setState({ loader: false })
-                window.location.reload();
+     
+      var file = this.state.selectedFile
+      let reader = new window.FileReader()
+      reader.readAsArrayBuffer(file)
+  
+     
+  
+       reader.onloadend = async () => {
+  
+        console.log("clicked reader",reader)
+        const buffer =  await Buffer.from(reader.result);
+  
+        await ipfs.add(buffer, (err, ipfsHash) => {
+          console.log("imagehash&err",err,ipfsHash[0].hash);
+          //setState by setting ipfsHash to ipfsHash[0].hash 
+          this.setState({ ipfsHash:ipfsHash[0].hash });
 
-
-                console.log("resultData", result);
-              }).catch((errr) => {
-                console.log(errr)
+          axios.get(api.API_URL + "getTokenId").then((resp) => {
+            console.log('++++++++api=====url', resp)
+            var tokenId = resp.data.data
+            this.setState({ loader: true })
+            this.state.contract.methods.mint(this.state.assetName, tokenId).send({ from: this.state.account })
+              .once('receipt', (receipt) => {
+                const data = new FormData()
+                data.append("assetName", this.state.assetName);
+                data.append("price", this.state.price);
+                data.append("description", this.state.description);
+                data.append("owner", this.state.account);
+                data.append("tokenId", tokenId)
+                data.append("ipfsHash",this.state.ipfsHash)
+                console.log("========hashinside", this.state.ipfsHash)
+                let url = api.API_URL + "uploadImage";
+                const config = {
+                  headers: { 'content-type': 'multipart/form-data' }
+                }
+                axios.post(url, data, config)
+                  .then((result) => {
+                    this.setState({ loader: false })
+                    // window.location.reload();
+                    console.log("resultData", result);
+                  }).catch((errr) => {
+                    console.log(errr)
+                    this.setState({ loader: false })
+                  })
+                console.log("receipt", receipt)
+              }).catch((errror) => {
+                console.log("metamask", errror)
                 this.setState({ loader: false })
               })
-            console.log("receipt", receipt)
-          }).catch((errror) => {
-            console.log("metamask", errror)
+          }).catch((errrs) => {
+            console.log("api", errrs)
             this.setState({ loader: false })
           })
-      }).catch((errrs) => {
-        console.log("api", errrs)
-        this.setState({ loader: false })
-      })
-    }
+    
+
+
+        })
+        
+       }
+
+
+     
+
+   }
   };
 
-  uploadImage= async ()=>{
-    console.log("clicked buton")
-
-    var file = this.state.selectedFile
-    let reader = new window.FileReader()
-    reader.readAsArrayBuffer(file)
-    reader.onloadend = () => this.convertToBuffer(reader)
-
-
-  }
 
   convertToBuffer = async(reader) => {
     //file is converted to a buffer for upload to IPFS
@@ -328,7 +345,7 @@ class App extends React.Component {
                 list.soldStatus === "1" ? (
 
                   <div className="assetfield"  >
-                    <img style={{ height: 200, width: 200 }} src={"http://localhost:3000/" + list.artImage} />
+                    <img style={{ height: 200, width: 200 }} src={api.IPFS_URL + list.ipfsHash} />
                     <p>Name: {list.assetName}</p>
                     <p>Price: {list.price}</p>
                     <p>Status:Sold</p>
@@ -336,7 +353,7 @@ class App extends React.Component {
                   </div>
                 ) : (
                     <div className="assetfield" onClick={() => this.openModal(list.tokenId)} >
-                      <img style={{ height: 200, width: 200 }} src={"http://localhost:3000/" + list.artImage} />
+                      <img style={{ height: 200, width: 200 }} src={api.IPFS_URL + list.ipfsHash} />
                       <p>Name: {list.assetName}</p>
                       <p>Price: {list.price}</p>
                       <p>Status:Not sold</p>
