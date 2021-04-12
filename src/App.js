@@ -406,7 +406,7 @@ class App extends React.Component {
 
           <div className="singlemodaldetail">
             <div className="imagesection">
-              <img src={"http://localhost:3000/" + this.state.imageName} alt="" />
+              <img src={api.IPFS_URL + this.state.ipfsHash} alt="" />
             </div>
             <div className="detailsection">
               <h1>{this.state.assetName}</h1>
