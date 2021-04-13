@@ -34,20 +34,38 @@ class Details extends React.Component {
 
 
     componentDidMount() {
-        console.log('this.props', this.props.location.state.tokenID)
-        this.setState({ tokenId: this.props.location.state.tokenID })
-        axios.post(api.API_URL + 'getsingledata', { "tokenId": this.props.location.state.tokenID }).then((respo) => {
-            console.log("========respo", respo)
-            this.setState({
-                ipfsHash: respo.data.data.ipfsHash,
-                price: respo.data.data.price,
-                assetName: respo.data.data.assetName,
-                description: respo.data.data.description
+
+
+
+        var jwttoken = localStorage.getItem('token')
+        console.log("jwttoken",jwttoken , " sdsdaasd ",  this.props.location.state.tokenID )
+
+        if (jwttoken) {
+            this.setState({ tokenId: this.props.location.state.tokenID })
+            const config = {
+                headers: {
+                    'authtoken': jwttoken,
+                }
+            }
+            axios.post(api.API_URL + 'getsingledata',{ "tokenId": this.props.location.state.tokenID }, config ).then((respo) => {
+                console.log("========respo", respo)
+                this.setState({
+                    ipfsHash: respo.data.data.ipfsHash,
+                    price: respo.data.data.price,
+                    assetName: respo.data.data.assetName,
+                    description: respo.data.data.description
+                })
+                console.log("singledatadetails", respo.data.data.assetName)
+            }).catch((er) => {
+                console.log('er', er)
             })
-            console.log("singledatadetails", respo.data.data.assetName)
-        }).catch((er) => {
-            console.log('er', er)
-        })
+        } else {
+            alert("Unauthorized Access")
+            this.props.history.push("/")
+        }
+
+
+
     }
 
 
@@ -60,30 +78,30 @@ class Details extends React.Component {
                 <Header />
                 <div className="container">
                     <div className="singlemodaldetail">
-                    <div class="row">
-                        
-                        <div className="col-sm-8">
-                            <div className="imagesection">
-                                <img src={api.IPFS_URL + this.state.ipfsHash} alt="" />
-                            </div>
-                        </div>
-                        <div className="col-sm-4">
-                            <div className="detailsection">
-                                <div className="sidedetail">
-                                    <h2>{this.state.assetName}</h2>
-                                    <div className="pricebox"><h3>{this.state.price}ETH</h3></div>
-                                    <div className="descriptionbox"><p>{this.state.description}</p></div>
-                                </div>
-                                <div className="bidsection">
-                                    <button className="btn btn-primary" onClick={this.etherAddress}>Buy</button>
+                        <div class="row">
 
+                            <div className="col-sm-8">
+                                <div className="imagesection">
+                                    <img src={api.IPFS_URL + this.state.ipfsHash} alt="" />
+                                </div>
+                            </div>
+                            <div className="col-sm-4">
+                                <div className="detailsection">
+                                    <div className="sidedetail">
+                                        <h2>{this.state.assetName}</h2>
+                                        <div className="pricebox"><h3>{this.state.price}ETH</h3></div>
+                                        <div className="descriptionbox"><p>{this.state.description}</p></div>
+                                    </div>
+                                    <div className="bidsection">
+                                        <button className="btn btn-primary" onClick={this.etherAddress}>Buy</button>
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                     </div>
                 </div>
-                
+
             </>
 
         )

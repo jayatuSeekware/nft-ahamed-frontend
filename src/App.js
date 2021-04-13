@@ -7,6 +7,8 @@ import Home from './Components/Home'
 import Detail from './Components/Details'
 import Signup from './Components/Signup'
 import Signin from './Components/Signin'
+import Createassets from './Components/Createasset'
+
 
 
 
@@ -17,10 +19,11 @@ function App() {
   return (
     <div className="App">
       <Switch>
-        <Route path="/" component={Home} exact />
-        <Route path="/Detail" component={Detail} />
-        <Route path="/Signup" component={Signup} />
-        <Route path="/Signin" component={Signin} />
+        <Route exact path="/" component={Home} exact />
+        <Route exact path="/Detail" component={Detail} />
+        <Route exact path="/Signup" component={Signup} />
+        <Route exact path="/Signin" component={Signin} />
+        <Route exact path="/Createassets" component={Createassets} />
       </Switch>
     </div>
   );

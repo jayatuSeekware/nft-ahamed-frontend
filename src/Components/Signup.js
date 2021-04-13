@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import api from '../api'
 import config from '../config'
-// import '../App.css';
-// import '../css/signin.css'
+import swal from 'sweetalert';
+
 
 
 
@@ -37,15 +37,15 @@ class Signup extends React.Component {
 
     signup = () => {
         if (this.state.username === "" || this.state.username === null) {
-            alert('Enter your username')
+            return swal({title:'Enter your username',icon:"error"})
         } else if (this.state.email === "" || this.state.email === null) {
-            alert("Enter your email address")
+            return swal({title:"Enter your email address",icon:"error"})
         } else if (this.state.password === "" || this.state.password === null) {
-            alert('Enter your password')
+            swal({title:'Enter your password',icon:"error"})
         } else if (this.state.confirmPass === "" || this.state.confirmPass === null) {
-            alert('Confirm your pasword')
+            swal({title:'Confirm your pasword',icon:"error"})
         } else if (this.state.confirmPass !== this.state.password) {
-            alert("Password and confirm Password don't match")
+            swal({title:"Password and confirm Password don't match",icon:"error"})
         } else {
             console.log('button clicked', this.state.username, this.state.email, this.state.password, this.state.confirmPass)
             axios.post(api.API_URL + 'register', {
@@ -56,11 +56,13 @@ class Signup extends React.Component {
             }).then((respdata) => {
                 console.log("respdata", respdata.data)
                 if (respdata.data.status === true) {
-                    alert("Registered successfull.")
-                    this.props.history.push('/Signin')
+                    swal({title:"Registered successfull.",icon:"success"}).then((resp)=>{
+
+                        this.props.history.push('/Signin')
+                    })
 
                 } else {
-                    alert("This email is already taken,try with another one")
+                    swal({title:"This email is already taken,try with another one",icon:"error"})
                 }
             }).catch((errs) => {
                 console.log('errs=====', errs)
@@ -73,32 +75,39 @@ class Signup extends React.Component {
         return (
             <>
 
-                <h3>Sign Up</h3>
+                <div style={{ marginLeft: 300, marginRight: 300, padding: 30 }}>
 
-                <div className="form-group">
-                    <label>Username</label>
-                    <input type="text" className="form-control" placeholder="Username" value={this.state.username} onChange={this.handleusername} />
+                    <h3>Sign Up</h3>
+
+                    <div className="form-group">
+                        <label>Username</label>
+                        <input type="text" className="form-control" placeholder="Username" value={this.state.username} onChange={this.handleusername} />
+                    </div>
+
+                    <div className="form-group">
+                        <label>Email</label>
+                        <input type="text" className="form-control" placeholder="Email" value={this.state.email} onChange={this.handleemail} />
+                    </div>
+
+                    <div className="form-group">
+                        <label>Password</label>
+                        <input type="password" className="form-control" placeholder="password" value={this.state.password} onChange={this.handlepassword} />
+                    </div>
+
+                    <div className="form-group">
+                        <label> Confirm Password</label>
+                        <input type="password" className="form-control" placeholder="Confirm password" value={this.state.confirmPass} onChange={this.handleconfirmpass} />
+                    </div>
+
+                    <button className="btn btn-primary btn-block" onClick={this.signup}>Sign Up</button>
+
+                    <div style={{ marginTop: 20 }}>
+
+                        <p className="forgot-password text-center">
+                            Already registered <a href="/Signin">sign in</a>
+                        </p>
+                    </div>
                 </div>
-
-                <div className="form-group">
-                    <label>Email</label>
-                    <input type="text" className="form-control" placeholder="Email" value={this.state.email} onChange={this.handleemail} />
-                </div>
-
-                <div className="form-group">
-                    <label>Password</label>
-                    <input type="password" className="form-control" placeholder="password" value={this.state.password} onChange={this.handlepassword} />
-                </div>
-
-                <div className="form-group">
-                    <label> Confirm Password</label>
-                    <input type="password" className="form-control" placeholder="Confirm password" value={this.state.confirmPass} onChange={this.handleconfirmpass} />
-                </div>
-
-                <button className="btn btn-primary btn-block" onClick={this.signup}>Sign Up</button>
-                <p className="forgot-password text-right">
-                    Already registered <a href="#">sign in?</a>
-                </p>
 
             </>
         )
