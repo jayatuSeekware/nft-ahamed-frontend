@@ -66,7 +66,12 @@ class Home extends React.Component {
 
   //List of all data in table;
   getAllData = async () => {
-    axios.get(api.API_URL + 'getalldata').then((listdata) => {
+
+    var token = localStorage.getItem('token')
+    const options = {
+      headers: {'authToken': token}
+    };
+    axios.get(api.API_URL + 'getalldata',options).then((listdata) => {
       console.log("====", listdata.data.data)
       this.setState({ dataList: listdata.data.data, soldstatus: listdata.data.data.soldStatus })
     }).catch((errs) => {
@@ -141,7 +146,7 @@ class Home extends React.Component {
 
   openModal = (data) => {
     console.log('shomodal=====', data)
-    this.props.history.push('/Detail',{
+    this.props.history.push('/Detail', {
       tokenID: data
     })
 
@@ -162,6 +167,7 @@ class Home extends React.Component {
   }
 
   paymentMethod = () => {
+    var token = localStorage.getItem('token');
     let assetname = this.state.assetName
     var txhash = this.state.transHash;
     var payamout = this.state.price;
@@ -189,7 +195,11 @@ class Home extends React.Component {
         this.setState({ loader: false })
 
       } else {
-        axios.post(api.API_URL + 'paymentdetail', {
+        const options = {
+          headers: {'authToken': token}
+        };
+        
+        axios.post(api.API_URL + 'paymentdetail',options, {
           "assetName": assetname,
           "tokenId": tokenid,
           "newOwnerAddrs": payaddr,
@@ -220,9 +230,8 @@ class Home extends React.Component {
 
 
   generateNftToken = () => {
-
-
-
+    var token = localStorage.getItem('token')
+    console.log("token===========", token)
     if (this.state.assetName === "" || this.state.assetName === null) {
       return alert("Enter your asset name")
     } else if (this.state.price === "" || this.state.price === null) {
@@ -232,30 +241,22 @@ class Home extends React.Component {
     } else if (this.state.description === "" || this.state.description === null) {
       return alert("Enter description")
     } else {
-
-
       this.setState({ loader: true })
-
-
       var file = this.state.selectedFile
       let reader = new window.FileReader()
       reader.readAsArrayBuffer(file)
-
       try {
-
-
-
         reader.onloadend = async () => {
-
           console.log("clicked reader", reader)
           const buffer = await Buffer.from(reader.result);
-
           await ipfs.add(buffer, (err, ipfsHash) => {
             console.log("imagehash&err", err, ipfsHash[0].hash);
             //setState by setting ipfsHash to ipfsHash[0].hash 
             this.setState({ ipfsHash: ipfsHash[0].hash });
-
-            axios.get(api.API_URL + "getTokenId").then((resp) => {
+            const options = {
+              headers: {'authToken': token}
+            };
+            axios.get(api.API_URL + "getTokenId",options).then((resp) => {
               console.log('++++++++api=====url', resp)
               var tokenId = resp.data.data
               this.state.contract.methods.mint(this.state.assetName, tokenId, this.state.ipfsHash).send({ from: this.state.account })
@@ -270,12 +271,15 @@ class Home extends React.Component {
                   console.log("========hashinside", this.state.ipfsHash)
                   let url = api.API_URL + "uploadImage";
                   const config = {
-                    headers: { 'content-type': 'multipart/form-data' }
+                    headers: {
+                      'content-type': 'multipart/form-data',
+                      'authtoken': token,
+                    }
                   }
                   axios.post(url, data, config)
                     .then((result) => {
                       this.setState({ loader: false })
-                      // window.location.reload();
+                      window.location.reload();
                       console.log("resultData", result);
                     }).catch((errr) => {
                       console.log(errr)
@@ -290,22 +294,13 @@ class Home extends React.Component {
               console.log("api", errrs)
               this.setState({ loader: false })
             })
-
-
-
           })
-
         }
-
       }
       catch (exception) {
         console.log('=====exec', exception)
         this.setState({ loader: false })
-
       }
-
-
-
     }
   };
 
@@ -327,8 +322,8 @@ class Home extends React.Component {
   render() {
     return (
       <>
-      <Header/>
-        
+        <Header />
+
         <div className="container">
 
           <div style={{ textAlign: "center" }}>
