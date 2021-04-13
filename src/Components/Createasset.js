@@ -71,7 +71,7 @@ class Createassets extends React.Component {
             }
         } catch (err) {
             console.log("errr", err)
-            swal("please install metamask","error")
+            swal({title:"please install metamask",icon:"error"})
         }
 
 
@@ -99,13 +99,13 @@ class Createassets extends React.Component {
         var token = localStorage.getItem('token')
         console.log("token===========", token)
         if (this.state.assetName === "" || this.state.assetName === null) {
-            return swal("Enter your asset name", "info");
+            return swal({title:"Enter your asset name", icon:"error"});
         } else if (this.state.price === "" || this.state.price === null) {
-            return swal("Enter your pay amount","info")
+            return swal({title:"Enter your pay amount",icon:"error"})
         } else if (this.state.selectedFile === "" || this.state.selectedFile === null) {
-            return swal("please select your assets image","error")
+            return swal({title:"please select your assets image",icon:"error"})
         } else if (this.state.description === "" || this.state.description === null) {
-            return swal("Enter description","info")
+            return swal({title:"Enter description",icon:"error"})
         } else {
             this.setState({ loader: true })
             var file = this.state.selectedFile
@@ -145,7 +145,7 @@ class Createassets extends React.Component {
                                     axios.post(url, data, config)
                                         .then((result) => {
                                             this.setState({ loader: false })
-                                            window.location.reload();
+                                            this.props.history.push("/")
 
                                             console.log("resultData", result);
                                         }).catch((errr) => {
