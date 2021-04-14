@@ -155,7 +155,7 @@ class Details extends React.Component {
                             if (!err)
                                 console.log("transhash", transactionHash);
                             if (transactionHash) {
-                                self.paymentMethod(transactionHash);
+                                self.paymentMethod(transactionHash,result[0]);
                             }
                         });
                 }
@@ -179,12 +179,12 @@ class Details extends React.Component {
         this.setState({ newModel: false })
     }
 
-    paymentMethod = (transhash) => {
+    paymentMethod = (transhash,receiverAdd) => {
         var token = localStorage.getItem('token');
         let assetname = this.state.assetName
         var txhash = transhash;
         var payamout = this.state.price;
-        var payaddr = this.state.ethadd;
+        var payaddr = receiverAdd;
         var tokenid = this.state.tokenId;
         console.log(txhash, "hash=======================", tokenid);
         const provider = new ethers.providers.JsonRpcProvider('https://rinkeby.infura.io/v3/f99366737d854f5e91ab29dad087fcd5');
