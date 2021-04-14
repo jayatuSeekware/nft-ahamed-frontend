@@ -18,17 +18,7 @@ require('dotenv').config()
 
 
 
-const customStyles = {
-  content: {
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
 
-  }
-};
 
 
 
@@ -56,7 +46,6 @@ class Home extends React.Component {
   }
 
   async componentWillMount() {
-
     await this.getAllData()
   };
 
@@ -88,7 +77,7 @@ class Home extends React.Component {
         tokenID: data
       })
     } else {
-      swal({title:"Unauthrized access! Login first",icon:"error"})
+      swal({ title: "Unauthrized access! Login first", icon: "error" })
     }
 
 
@@ -99,74 +88,11 @@ class Home extends React.Component {
     this.setState({ showModal: false })
   }
 
-  etherAddress = () => {
-    const ethaddress = "0x93b8d57D2CECdC0Fd485CFCD7fB965D575445DcB"
-    this.setState({ ethadd: ethaddress, newModel: true })
-  }
-
-  closeModalNew = () => {
-    this.setState({ newModel: false })
-  }
-
-  paymentMethod = () => {
-    var token = localStorage.getItem('token');
-    let assetname = this.state.assetName
-    var txhash = this.state.transHash;
-    var payamout = this.state.price;
-    var payaddr = this.state.ethadd;
-    var tokenid = this.state.tokenId;
-    console.log(txhash, "hash=======================", tokenid);
-    const provider = new ethers.providers.JsonRpcProvider('https://rinkeby.infura.io/v3/f99366737d854f5e91ab29dad087fcd5');
-    this.setState({ loader: true })
 
 
-    if (txhash === "" || txhash === null) {
-      return swal("Enter your transaction hash.", "error");
-    }
-
-    provider.getTransaction(txhash).then((transaction) => {
-      console.log("transdetails", transaction.from, transaction.to);
-      let paidprice = transaction.value.toString() / 1E18;
-      let sendtoadd = transaction.to;
-      if (payamout !== paidprice) {
-        alert("Please pay required amount.")
-        this.setState({ loader: false })
-
-      } else if (payaddr !== sendtoadd) {
-        alert("please pay to correct address")
-        this.setState({ loader: false })
-
-      } else {
-        const options = {
-          headers: { 'authToken': token }
-        };
-
-        axios.post(api.API_URL + 'paymentdetail', options, {
-          "assetName": assetname,
-          "tokenId": tokenid,
-          "newOwnerAddrs": payaddr,
-          "boughtTokenHash": txhash,
-          "tokenPrice": payamout,
-        }).then((datas) => {
-          console.log('datas', datas)
-          if (datas.data.status) {
-            this.setState({ newModel: false, showModal: false })
-            if (!alert('Transfering success')) { window.location.reload(); }
-          } else {
-            alert("Tranfering failed.")
-            this.setState({ loader: false })
-          }
-        }).catch((errss) => {
-          console.log('++++++++catchblock', errss)
-          this.setState({ loader: false })
-
-        })
-
-      }
-    });
+ 
 
 
-  }
 
 
   render() {
@@ -222,70 +148,6 @@ class Home extends React.Component {
 
             )}
 
-
-
-
-            {/* ======modal1======== */}
-            <Modal
-              isOpen={this.state.showModal}
-              style={customStyles}
-              contentLabel="Example Modal"
-              ariaHideApp={false}
-            >
-              <div className="row">
-                <div className="singlemodaldetail">
-                  <div className="col-sm-8">
-                    <div className="imagesection">
-                      <img src={api.IPFS_URL + this.state.ipfsHash} alt="" />
-                    </div>
-                  </div>
-                  <div className="col-sm-4">
-                    <div className="detailsection">
-                      <div className="sidedetail">
-                        <h2>{this.state.assetName}</h2>
-                        <div className="pricebox"><h3>{this.state.price}ETH</h3></div>
-                        <div className="descriptionbox"><p>{this.state.description}</p></div>
-                      </div>
-                      <div className="bidsection">
-                        <button onClick={this.etherAddress}>Buy</button>
-                      </div>
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-
-
-              <button className="closemodal" onClick={this.closeModal}>X</button>
-
-            </Modal>
-            {/* modalsecond */}
-            <Modal
-              isOpen={this.state.newModel}
-              style={customStyles}
-              contentLabel="Example Modal"
-              ariaHideApp={false}
-            >
-
-              <div className="paymentmodal">
-                <div className="paysection">
-                  <h1>Ethereum Address</h1>
-                  <div className="qrcode-area">
-                    <QRCode value={this.state.ethadd} />
-                  </div>
-                  <p>{this.state.ethadd}</p>
-                  <p>Amount To Pay: {this.state.price}ETH</p>
-                  <p>Enter Your Transection Hash</p>
-                  <input type="text" placeholder="Transection Hash" onChange={this.handleHash}></input>
-
-                  <div className="bidsection">
-                    <button onClick={this.paymentMethod}>I Have Paid</button>
-                  </div>
-                </div>
-              </div>
-
-              <button className="closemodal" onClick={this.closeModalNew}>X</button>
-            </Modal>
           </div>
         </div>
       </>

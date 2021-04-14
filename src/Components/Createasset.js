@@ -6,6 +6,7 @@ import api from '../api'
 import config from '../config'
 import Loading from 'react-fullscreen-loading';
 import swal from 'sweetalert';
+import Header from './Header';
 
 
 const IPFS = require('ipfs-api');
@@ -24,7 +25,8 @@ class Createassets extends React.Component {
             description: "",
             tokenId: "",
             ipfsHash: "",
-            loader:false
+            loader: false,
+            imagepreview: ""
         }
     }
 
@@ -49,7 +51,7 @@ class Createassets extends React.Component {
             console.log("totalsupply&contract", totalSupply, contract)
 
         } catch (err) {
-            swal(err,"error")
+            swal(err, "error")
         }
 
     }
@@ -71,7 +73,7 @@ class Createassets extends React.Component {
             }
         } catch (err) {
             console.log("errr", err)
-            swal({title:"please install metamask",icon:"error"})
+            swal({ title: "please install metamask", icon: "error" })
         }
 
 
@@ -86,7 +88,12 @@ class Createassets extends React.Component {
     }
 
     onFileChange = event => {
-        this.setState({ selectedFile: event.target.files[0] });
+        this.setState({
+            selectedFile: event.target.files[0],
+            imagepreview: URL.createObjectURL(event.target.files[0])
+        });
+
+
     };
 
     handleDes = (event) => {
@@ -99,13 +106,13 @@ class Createassets extends React.Component {
         var token = localStorage.getItem('token')
         console.log("token===========", token)
         if (this.state.assetName === "" || this.state.assetName === null) {
-            return swal({title:"Enter your asset name", icon:"error"});
+            return swal({ title: "Enter your asset name", icon: "error" });
         } else if (this.state.price === "" || this.state.price === null) {
-            return swal({title:"Enter your pay amount",icon:"error"})
+            return swal({ title: "Enter your pay amount", icon: "error" })
         } else if (this.state.selectedFile === "" || this.state.selectedFile === null) {
-            return swal({title:"please select your assets image",icon:"error"})
+            return swal({ title: "please select your assets image", icon: "error" })
         } else if (this.state.description === "" || this.state.description === null) {
-            return swal({title:"Enter description",icon:"error"})
+            return swal({ title: "Enter description", icon: "error" })
         } else {
             this.setState({ loader: true })
             var file = this.state.selectedFile
@@ -120,7 +127,7 @@ class Createassets extends React.Component {
                         //setState by setting ipfsHash to ipfsHash[0].hash 
                         this.setState({ ipfsHash: ipfsHash[0].hash });
                         const options = {
-                            headers: { 'authToken': token }
+                            headers: { 'authtoken': token }
                         };
                         axios.get(api.API_URL + "getTokenId", options).then((resp) => {
                             console.log('++++++++api=====url', resp)
@@ -174,34 +181,60 @@ class Createassets extends React.Component {
     render() {
         return (
             <>
-
+                <Header />
                 {this.state.loader ? (<Loading loading background="#ffffff00" loaderColor="#3498db" />) : (
                     <div className={'generatenftarea'}>
-                        <h1>Nft Assets</h1>
+                        <h1>Create your collection</h1>
 
-                        <table>
+                        <table className="">
                             <tr>
-                                <td><label>Asset Name</label></td>
-                                <td><input type="text" value={this.state.assetName} onChange={this.handleAssetName} /></td>
+                                {/* <td><label>Asset Name</label></td> */}
+                                <td><input type="text" placeholder="Asset Name" value={this.state.assetName} onChange={this.handleAssetName} /></td>
                             </tr>
                             <tr>
-                                <td><label>Price</label></td>
-                                <td><input type="text" value={this.state.price} onChange={this.handlePrice} /></td>
+                                {/* <td><label>Price</label></td> */}
+                                <td><input type="text" placeholder="Price" value={this.state.price} onChange={this.handlePrice} /></td>
                             </tr>
                             <tr>
-                                <td><label>Upload your img</label></td>
-                                <td> <input type="file" onChange={this.onFileChange} /></td>
+                                {/* <td><label>Upload your img</label></td> */}
+                                {/* <td> <input type="file" className="" placeholder="Upload your img" onChange={this.onFileChange} /></td> */}
+                                <td style={{ textAlign: "center" }}>
+                                    <label className="custom-file-select">
+                                        {this.state.selectedFile ? (
+                                            <img src={this.state.imagepreview} />
+                                        ) : (
+                                            <i class="fas fa-image"></i>
+                                        )}
+                                        <input type="file" className="" placeholder="Upload your img" onChange={this.onFileChange} />
+                                    </label>
+
+                                </td>
                             </tr>
                             <tr>
-                                <td><label>Description</label></td>
-                                <td><input type="text" value={this.state.description} onChange={this.handleDes} /></td>
+                                {/* <td><label>Description</label></td> */}
+                                <td><input type="text" placeholder="Description" value={this.state.description} onChange={this.handleDes} /></td>
+
+
                             </tr>
                             <tr>
 
                             </tr>
                         </table>
-                        <button onClick={this.generateNftToken}> Generate Nft</button>
+                        {/* <button className="fadeIn fourth" onClick={this.generateNftToken}> Generate Nft</button> */}
+                        <input type="submit" className="fadeIn fourth" value="Generate Nft" onClick={this.generateNftToken}></input>
+
+
+                        {/* test start */}
+
+
+                        {/* test end */}
+
+
+
+
                     </div>
+
+
 
                 )}
 

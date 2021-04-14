@@ -51,13 +51,6 @@ function Header() {
                                 <button style={{ marginLeft: 20 }} className="btn btn-primary" onClick={generateasset}>Generate asset</button>
                             </div>
                         )}
-
-                        {/* <button className="btn btn-primary" onClick={login}>Login</button>
-
-
-
-                        <button style={{ marginLeft: 20 }} className="btn btn-primary" onClick={generateasset}>Generate asset</button> */}
-
                     </div>
 
 
