@@ -197,11 +197,7 @@ class Details extends React.Component {
                 swal({ title: "Please pay required amount.", icon: "error" })
                 this.setState({ loader: false })
 
-            } else if (payaddr !== sendtoadd) {
-                swal({ title: "please pay to correct address", icon: "error" })
-                this.setState({ loader: false })
-
-            } else {
+            }else {
                 const options = {
                     headers: { 'authtoken': token }
                 };
