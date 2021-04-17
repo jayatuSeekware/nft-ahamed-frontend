@@ -45,9 +45,74 @@ label.custom-file-select img {
   max-width: 150px;
   max-height: 150px;
 }
+/* ----------header--------------------- */
+.navbar-brand img {
+  width: 40px;
+  height: 40px;
+}
+.nav-custom-style {
+  background: rgb(255, 255, 255);
+  color: rgb(4, 4, 5);
+  border-bottom: 1px solid rgba(4, 4, 5, 0.1);
+}
+.search-box {
+  width: 35%;
+}
+.header-menu {
+  margin-left: 30px;
+}
+.nav-link {
+  color: rgba(4, 4, 5, 0.5);
+}
+.blue-btn {
+  border-color: transparent;
+  color: rgb(0, 102, 255);
+  background: rgba(0, 102, 255, 0.15);
+}
+blue-btn:hover {
+  color: rgba(0, 102, 255, 0.9);
+  background: rgba(0, 102, 255, 0.2);
+}
+.border-btn {
+  border-color: rgba(4, 4, 5, 0.1);
+  color: rgb(4, 4, 5);
+  background: transparent;
+}
+/* ------------header----------------------- */
+.sellers-area {
+  border-bottom: 1px solid rgba(4, 4, 5, 0.1);
+}
+.seller-title span {
+  color: rgb(0, 102, 255);
+}
+.seller-title {
+  text-align: left;
+  padding: 10px 0;
+}
+.seller-title h3 {
+  text-align: left;
+  padding: 10px 0;
+  font-weight:bold ;
+}
+.explore-menu li a {
+  color: rgb(4, 4, 5);
+  background: rgb(255, 255, 255);
+  margin: 0 20px;
+  border-radius: 20px;
+  border: 1px solid rgba(4, 4, 5, 0.1);
+}
+ul.explore-menu {
+  margin-left: 10%;
+}
+.explore-menu li a.active {
+  background: rgb(4, 4, 5);
+  border: 1px solid rgb(4, 4, 5);
+  color: rgb(255, 255, 255);
+  box-shadow: rgb(0 0 0 / 8%) 1px 2px 10px;
+}
 
 .assetarea {
-  margin-top: 50px;
+  margin-top: 20px;
 }
 
 .assetfield {
@@ -56,7 +121,7 @@ label.custom-file-select img {
     border: 1px solid rgba(4, 4, 5, 0.1);
     border-radius: 10px;
     background: rgb(255, 255, 255);
-    width: 270px;
+    width: 260px;
     margin-bottom: 20px;
 
 }
@@ -120,6 +185,7 @@ h3.assetname {
 
 .singlemodaldetail {
   padding-top: 20px;
+  margin-top: 75px;
 }
 
 .imagesection {
@@ -403,3 +469,26 @@ i.fa.fa-eye {
     color: #56baed;
 
 }
+.carousel-controls i.fa{
+  font-size: 30px;
+  border: 2px solid;
+  border-radius: 10px;
+  padding: 10px;
+  color: rgba(4, 4, 5, 0.5);
+  background-color: #fff;
+}
+.carousel-inner {
+  overflow: visible;
+}
+.carousel-controls i.fa.fa-angle-left {
+  position: relative;
+  right: 80px;
+}
+.carousel-controls i.fa.fa-angle-right {
+  position: relative;
+  left: 96px;
+}
+
+
+
+/* Slider */

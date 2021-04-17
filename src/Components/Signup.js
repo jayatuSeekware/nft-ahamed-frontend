@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
+import React from 'react';
 import axios from 'axios';
 import api from '../api'
-import config from '../config'
 import swal from 'sweetalert';
 
 
@@ -16,7 +15,6 @@ class Signup extends React.Component {
             password: "",
             confirmPass: "",
             hidden: true,
-            password: ''
         }
     }
 
@@ -35,6 +33,7 @@ class Signup extends React.Component {
     handleconfirmpass = (event) => {
         this.setState({ confirmPass: event.target.value })
     }
+
     toggleShow = () => {
         this.setState({ hidden: !this.state.hidden });
     }
@@ -53,7 +52,7 @@ class Signup extends React.Component {
         } else if (this.state.confirmPass !== this.state.password) {
             swal({ title: "Password and confirm Password don't match", icon: "error" })
         } else {
-            console.log('button clicked', this.state.username, this.state.email, this.state.password, this.state.confirmPass)
+            // console.log('signupmethod_data', this.state.username, this.state.email, this.state.password, this.state.confirmPass)
             axios.post(api.API_URL + 'register', {
                 "userName": this.state.username,
                 "email": this.state.email,
@@ -63,7 +62,6 @@ class Signup extends React.Component {
                 console.log("respdata", respdata.data)
                 if (respdata.data.status === true) {
                     swal({ title: "Registered successfull.", icon: "success" }).then((resp) => {
-
                         this.props.history.push('/Signin')
                     })
 
@@ -71,7 +69,7 @@ class Signup extends React.Component {
                     swal({ title: "This email is already taken,try with another one", icon: "error" })
                 }
             }).catch((errs) => {
-                console.log('errs=====', errs)
+                // console.log('signup_catchlock=====', errs)
             })
         }
     }
@@ -80,42 +78,6 @@ class Signup extends React.Component {
     render() {
         return (
             <>
-
-                {/* <div style={{ marginLeft: 300, marginRight: 300, padding: 30 }}>
-
-                    <h3>Sign Up</h3>
-
-                    <div className="form-group">
-                        <label>Username</label>
-                        <input type="text" className="form-control" placeholder="Username" value={this.state.username} onChange={this.handleusername} />
-                    </div>
-
-                    <div className="form-group">
-                        <label>Email</label>
-                        <input type="text" className="form-control" placeholder="Email" value={this.state.email} onChange={this.handleemail} />
-                    </div>
-
-                    <div className="form-group">
-                        <label>Password</label>
-                        <input type="password" className="form-control" placeholder="password" value={this.state.password} onChange={this.handlepassword} />
-                    </div>
-
-                    <div className="form-group">
-                        <label> Confirm Password</label>
-                        <input type="password" className="form-control" placeholder="Confirm password" value={this.state.confirmPass} onChange={this.handleconfirmpass} />
-                    </div>
-
-                    <button className="btn btn-primary btn-block" onClick={this.signup}>Sign Up</button>
-
-                    <div style={{ marginTop: 20 }}>
-
-                        <p className="forgot-password text-center">
-                            Already registered <a href="/Signin">sign in</a>
-                        </p>
-                    </div>
-                </div> */}
-
-                {/* test start */}
                 <div className="main-body">
                     <div className="container h-100 ">
 
@@ -133,8 +95,6 @@ class Signup extends React.Component {
                                     <input type={this.state.hidden ? 'password' : 'text'} placeholder="Confirm password" value={this.state.confirmPass} onChange={this.handleconfirmpass}></input>
                                     <i class="fa fa-eye" aria-hidden="true" onClick={this.toggleShow}></i>
                                 </div>
-
-
                                 <input type="submit" className="fadeIn fourth" value="Sign Up" onClick={this.signup}></input>
                             </div>
                             <div id="formFooter">
@@ -144,9 +104,6 @@ class Signup extends React.Component {
 
                     </div>
                 </div>
-
-                {/* testend */}
-
             </>
         )
     }

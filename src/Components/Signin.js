@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 import axios from 'axios';
 import api from '../api'
-import config from '../config'
 import swal from 'sweetalert';
+
 
 
 
@@ -14,7 +14,6 @@ class Signin extends React.Component {
             email: "",
             password: "",
             hidden: true,
-            password: '',
         }
     }
 
@@ -30,28 +29,27 @@ class Signin extends React.Component {
     }
 
     signin = () => {
-        console.log("signin button clicked")
         if (this.state.email === "" || this.state.email === null) {
             return swal({ title: "Enter your email address", icon: "error" })
         } else if (this.state.password === "" || this.state.password === null) {
             return swal({ title: "Enter your password", icon: "error" })
         } else {
-            console.log("======elsecase", this.state.email, this.state.password)
+            // console.log("email&password", this.state.email, this.state.password)
             axios.post(api.API_URL + 'login', {
                 "email": this.state.email,
                 "password": this.state.password
             }).then((respdata) => {
                 console.log("respdata", respdata.data)
                 if (respdata.data.status === true) {
-                    localStorage.setItem("token", respdata.data.token);
+                    sessionStorage.setItem("token", respdata.data.token);
                     this.props.history.push('/')
                 } else {
-                    return swal({ title: "Login failed,check your email and password", icon: "error" })
+                    console.log("elsecase========")
+                    swal({ title: respdata.data.message, icon: "error" })
+                    this.props.history.push("/Signin");
                 }
             }).catch((errors) => {
-                console.log("errors", errors)
-
-
+                // console.log("errors", errors)
             })
         }
     }
@@ -60,43 +58,8 @@ class Signin extends React.Component {
     render() {
         return (
             <>
-                {/* <div style={{ marginLeft: 300, marginRight: 300, padding: 30 }}>
-                    <h3>Sign In</h3>
-
-                    <div className="form-group">
-                        <label>Email address</label>
-                        <input type="email" className="form-control" placeholder="Enter email" value={this.state.email} onChange={this.handleEmail} />
-                    </div>
-
-                    <div className="form-group">
-                        <label>Password</label>
-                        <input type="password" className="form-control" placeholder="Enter password" value={this.state.password} onChange={this.handlePassword} />
-                    </div> */}
-
-                {/* <div className="form-group">
-                    <div className="custom-control custom-checkbox">
-                        <input type="checkbox" className="custom-control-input" id="customCheck1" />
-                        <label className="custom-control-label" htmlFor="customCheck1">Remember me</label>
-                    </div>
-                </div> */}
-
-                {/* <button className="btn btn-primary btn-block" onClick={this.signin}>Submit</button>
-
-                    <div style={{ marginTop: 20 }}>
-
-                        <p >
-                            <a href="/Signup">Signup</a>
-                            <a> | </a>
-                            <a href="#">Forgot password?</a>
-                        </p>
-                    </div>
-                </div> */}
-
-                {/* test start */}
                 <div className="main-body">
                     <div className="container h-100 ">
-
-
                         <div className="formContent">
                             <h1>Login</h1>
                             <div>
@@ -116,8 +79,6 @@ class Signin extends React.Component {
 
                     </div>
                 </div>
-
-                {/* testend */}
             </>
         )
     }
