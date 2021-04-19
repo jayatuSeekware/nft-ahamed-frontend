@@ -2,7 +2,7 @@ import React from 'react';
 import { useHistory } from "react-router-dom";
 import swal from 'sweetalert';
 import Logo from '../images/nlogo.jpg';
-import Howto from './howto';
+// import Howto from './howto';
 
 var jwttoken;
 
@@ -25,9 +25,7 @@ function Header() {
             return swal({ title: "Please login!", icon: "error" })
         }
     }
-    const howto = () => {
-        history.push("/howto");
-    }
+
 
     return (
         <div className="topheader">
@@ -48,10 +46,10 @@ function Header() {
                     </div>
                     <ul class="nav header-menu">
                         <li class="nav-item">
-                            <a class="nav-link" href="#" >Explore</a>
+                            <a class="nav-link" href="/" >Explore</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#" onClick={howto}>How it works</a>
+                            <a class="nav-link" href="/howto"  target="_blank">How it works</a>
                         </li>
 
                     </ul>

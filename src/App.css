@@ -491,4 +491,37 @@ i.fa.fa-eye {
 
 
 
-/* Slider */
+/* How to page */
+.collaps-title {
+  display: flex;
+  padding: 10px 0;
+}
+.collaps-container {
+  text-align: left;
+  margin: 10px 0;
+}
+.collaps-title span {
+  margin-right: 10px;
+  padding: 2px;
+  cursor: pointer;
+  line-height: 14px;
+}
+
+.collaps-title h4 {
+  font-size: 16px;
+}
+.collaps-title .fas {
+  font-size: 14px;
+}
+.question-area {
+  padding: 0 96px;
+  text-align: left;
+  margin-top: 125px;
+}
+.question-area h3 {
+  color: rgb(0, 102, 255);
+  margin: 20px 0;
+}
+.collapse p{
+  color: rgb(55, 53, 47);
+}

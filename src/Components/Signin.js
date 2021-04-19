@@ -39,9 +39,11 @@ class Signin extends React.Component {
                 "email": this.state.email,
                 "password": this.state.password
             }).then((respdata) => {
-                console.log("respdata", respdata.data)
+                console.log("respdata============>login", respdata.data.data)
                 if (respdata.data.status === true) {
-                    sessionStorage.setItem("token", respdata.data.token);
+                    sessionStorage.setItem("token", respdata.data.data.token);
+                    localStorage.setItem('currentUserEmail',respdata.data.data.email)
+                    
                     this.props.history.push('/')
                 } else {
                     console.log("elsecase========")

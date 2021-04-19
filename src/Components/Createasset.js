@@ -38,7 +38,7 @@ class Createassets extends React.Component {
     };
 
     loadBlockchainData = async () => {
-        console.log(",hgfcf",contractAddress)
+        console.log(",hgfcf", contractAddress)
         try {
             const web3 = window.web3
             // Load account
@@ -50,10 +50,10 @@ class Createassets extends React.Component {
             const totalSupply = await contract.methods.totalSupply().call()
             this.setState({ totalSupply })
             // Load asset
-             console.log("totalsupply&contract", totalSupply, contract)
+            console.log("totalsupply&contract", totalSupply, contract)
 
         } catch (err) {
-             console.log("loadBlockchainData=catchblock", err)
+            console.log("loadBlockchainData=catchblock", err)
         }
 
     }
@@ -98,11 +98,14 @@ class Createassets extends React.Component {
         this.setState({ description: event.target.value })
     }
 
-    generateNftToken = () => {
+    generateNftToken = async () => {
 
+        const ownerethaddress = "0x93b8d57D2CECdC0Fd485CFCD7fB965D575445DcB"
+
+        var email = localStorage.getItem("currentUserEmail")
         var token = sessionStorage.getItem('token')
         var self = this;
-        console.log("jwttoken=", token)
+        console.log("jwttoken=", token,email)
         if (this.state.assetName === "" || this.state.assetName === null) {
             return swal({ title: "Enter your asset name", icon: "error" });
         } else if (this.state.price === "" || this.state.price === null) {
@@ -120,69 +123,99 @@ class Createassets extends React.Component {
                 reader.onloadend = async () => {
                     // console.log("clicked reader ipfs", reader)
                     const buffer = await Buffer.from(reader.result);
-                    await ipfs.add(buffer, (err, ipfsHash) => {
+                    await ipfs.add(buffer, async (err, ipfsHash) => {
                         // console.log("imagehash&err", err, ipfsHash[0].hash);
                         //setState by setting ipfsHash to ipfsHash[0].hash 
                         this.setState({ ipfsHash: ipfsHash[0].hash });
-                        const options = {
-                            headers: { 'authtoken': token }
-                        };
-                        axios.get(api.API_URL + "getTokenId", options).then((resp) => {
-                            console.log('getTokenidresponse', resp.data.data)
+                        // const options = {
+                        //     headers: { 'authtoken': token }
+                        // };
+
+                        const newTokenID = await self.state.contract.methods.getTokenId().call()
 
 
-                            if (!resp.data.status) {
+                        console.log('getTokenidresponse', newTokenID)
 
-                                this.setState({loader:false})
-                                swal({ title: "token expired,Please login again", icon: "error" })
-                                this.props.history.push('/')
-                                
-                            } else {
-                                console.log("elsecase")
+                        console.log("elsecase")
 
-                                var tokenId = resp.data.data
-                                self.state.contract.methods.mint(this.state.assetName, tokenId, this.state.ipfsHash).send({ from: this.state.account })
-                                    .once('receipt', (receipt) => {
-                                        console.log("receipt", receipt)
-                                        const data = new FormData()
-                                        data.append("assetName", this.state.assetName);
-                                        data.append("price", this.state.price);
-                                        data.append("description", this.state.description);
-                                        data.append("owner", this.state.account);
-                                        data.append("tokenId", tokenId)
-                                        data.append("ipfsHash", this.state.ipfsHash)
-                                        // console.log("ipfshashstate", this.state.ipfsHash)
-                                        let url = api.API_URL + "uploadImage";
-                                        const config = {
-                                            headers: {
-                                                'content-type': 'multipart/form-data',
-                                                'authtoken': token,
-                                            }
+                        var tokenId = newTokenID
+                        self.state.contract.methods.mint(this.state.assetName, this.state.ipfsHash).send({ from: this.state.account })
+                            .once('receipt', (receipt) => {
+                                console.log("receipt==========", receipt)
+                                this.setState({ loader: false })
+                                swal({
+                                    title: "Do you want to list your token for Selling?",
+                                    // text: "Once deleted, you will not be able to recover this imaginary file!",
+                                    icon: "warning",
+                                    buttons: true,
+                                    dangerMode: true,
+                                })
+                                    .then((yes) => {
+                                        this.setState({ loader: true })
+                                        if (yes) {
+                                            console.log("ssssssxxxx", ownerethaddress, tokenId);
+                                            self.state.contract.methods.approve(ownerethaddress, tokenId).send({ from: this.state.account })
+                                                .once('receipt', (receipts) => {
+                                                    console.log("reciepts ====>", receipts)
+                                                    this.setState({ loader: false })
+                                                    swal({ title: "Your token has been added to list!", icon: "success" });
+                                                    const data = new FormData()
+                                                    data.append("assetName", this.state.assetName);
+                                                    data.append("price", this.state.price);
+                                                    data.append("description", this.state.description);
+                                                    data.append("owner", this.state.account);
+                                                    data.append("tokenId", tokenId)
+                                                    data.append("ipfsHash", this.state.ipfsHash)
+                                                    // console.log("ipfshashstate", this.state.ipfsHash)
+                                                    let url = api.API_URL + "uploadImage";
+                                                    const config = {
+                                                        headers: {
+                                                            'content-type': 'multipart/form-data',
+                                                            'authtoken': token,
+                                                        }
+                                                    }
+                                                    axios.post(url, data, config)
+                                                        .then((result) => {
+                                                            console.log("resultDataupload_image", result);
+                                                            this.setState({ loader: false })
+                                                            this.props.history.push("/")
+                                                        }).catch((errr) => {
+                                                            this.setState({ loader: false })
+                                                        })
+                                                })
                                         }
-                                        axios.post(url, data, config)
-                                            .then((result) => {
-                                                console.log("resultDataupload_image", result);
-                                                this.setState({ loader: false })
-                                                this.props.history.push("/")
-                                            }).catch((errr) => {
-                                                this.setState({ loader: false })
-                                            })
-                                    }).catch((errror) => {
-                                        console.log("metamask", errror)
-                                        this.setState({ loader: false })
-                                    })
+                                        else {
 
+                                            let url = api.API_URL + "tokennotlist";
+                                            const config = {
+                                                headers: {
+                                                    'authtoken': token,
+                                                }
+                                            }
 
-                            }
-
-
-                        }).catch((errrs) => {
-                            console.log("api", errrs)
-                            this.setState({ loader: false })
-                        })
-
-
-
+                                            axios.post(url, {
+                                                "assetName": this.state.assetName,
+                                                "price": this.state.price,
+                                                "description": this.state.description,
+                                                "owner": this.state.account,
+                                                "tokenId": tokenId,
+                                                "ipfsHash": this.state.ipfsHash,
+                                                "email":email
+                                            }, config)
+                                                .then((resultdata) => {
+                                                    console.log("resultDataupload_image", resultdata);
+                                                    this.setState({ loader: false })
+                                                    swal({ title: "Thanks for Generating Tokens", icon: "info" });
+                                                    this.props.history.push("/")
+                                                }).catch((errr) => {
+                                                    this.setState({ loader: false })
+                                                })
+                                        }
+                                    });
+                            }).catch((errror) => {
+                                console.log("metamask", errror)
+                                this.setState({ loader: false })
+                            })
                     })
                 }
             }

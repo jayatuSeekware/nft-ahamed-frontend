@@ -167,7 +167,6 @@ class Home extends React.Component {
                   </div>
                   <Carousel 
                 responsive={responsive}
-                
                 >
                 {this.state.dataList.map(list => (
                           list.soldStatus === "1" ? (
