@@ -34,17 +34,22 @@ class Signin extends React.Component {
         } else if (this.state.password === "" || this.state.password === null) {
             return swal({ title: "Enter your password", icon: "error" })
         } else {
-            // console.log("email&password", this.state.email, this.state.password)
             axios.post(api.API_URL + 'login', {
                 "email": this.state.email,
+                "userType": 1,
                 "password": this.state.password
             }).then((respdata) => {
-                console.log("respdata============>login", respdata.data.data)
+                console.log("respdata============>login", respdata.data)
                 if (respdata.data.status === true) {
                     sessionStorage.setItem("token", respdata.data.data.token);
-                    localStorage.setItem('currentUserEmail',respdata.data.data.email)
-                    
-                    this.props.history.push('/')
+                    localStorage.setItem('currentUserEmail', respdata.data.data.email)
+                    if (respdata.data.data.email === "erkrujjawal@gmail.com") {
+                        this.props.history.push('/admindashboard')
+                    } else {
+                        this.props.history.push('/')
+                    }
+
+
                 } else {
                     console.log("elsecase========")
                     swal({ title: respdata.data.message, icon: "error" })
@@ -69,7 +74,7 @@ class Signin extends React.Component {
 
                                 <div className="pas-field">
                                     <input type={this.state.hidden ? 'password' : 'text'} name="login" placeholder="Enter password" value={this.state.password} onChange={this.handlePassword}></input>
-                                    <i class="fa fa-eye" aria-hidden="true" onClick={this.toggleShow}></i>
+                                    <i className="fa fa-eye" aria-hidden="true" onClick={this.toggleShow}></i>
                                 </div>
                                 <input type="submit" className="fadeIn fourth" value="Log In" onClick={this.signin}></input>
 

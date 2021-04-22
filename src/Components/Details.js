@@ -220,7 +220,7 @@ class Details extends React.Component {
                 <div className="container">
                     {this.state.loader ? (<Loading loading background="#ffffff00" loaderColor="#3498db" />) : (
                         <div className="singlemodaldetail">
-                            <div class="row">
+                            <div className="row">
                                 <div className="col-sm-8">
                                     <div className="imagesection">
                                         <img src={api.IPFS_URL + this.state.ipfsHash} alt="" />

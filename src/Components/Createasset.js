@@ -164,8 +164,9 @@ class Createassets extends React.Component {
                                                     data.append("price", this.state.price);
                                                     data.append("description", this.state.description);
                                                     data.append("owner", this.state.account);
-                                                    data.append("tokenId", tokenId)
-                                                    data.append("ipfsHash", this.state.ipfsHash)
+                                                    data.append("tokenId", tokenId);
+                                                    data.append("ipfsHash", this.state.ipfsHash);
+                                                     data.append("email",email);
                                                     // console.log("ipfshashstate", this.state.ipfsHash)
                                                     let url = api.API_URL + "uploadImage";
                                                     const config = {
@@ -246,7 +247,7 @@ class Createassets extends React.Component {
                                         {this.state.selectedFile ? (
                                             <img src={this.state.imagepreview} alt="" />
                                         ) : (
-                                            <i class="fas fa-image"></i>
+                                            <i className="fas fa-image"></i>
                                         )}
                                         <input type="file" className="" placeholder="Upload your img" onChange={this.onFileChange} />
                                     </label>

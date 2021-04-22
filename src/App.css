@@ -525,3 +525,101 @@ i.fa.fa-eye {
 .collapse p{
   color: rgb(55, 53, 47);
 }
+
+/* ========admindashboard style========= */
+.admintopheader .navbar{
+  background: #000;
+    color: #fff;
+}
+.navbar-brand{
+  color: #fff;
+}
+.admintopheader .header-menu a.nav-link {
+  color: #fff;
+}
+.nav-side-icon span {
+  padding: 10px;
+}
+
+
+.sidebar {
+  height: 100%;
+  width: 220px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #000;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 70px;
+}
+
+.sidebar a:hover {
+  color: #f1f1f1;
+}
+.sidebar i.fas {
+  display: inline-block;
+  width: 1rem;
+  margin-right: 8px;
+  transition: margin-right .5s ease;
+}
+.sidebar span {
+  display: inline-block;
+}
+.sidebar a {
+  text-decoration: none;
+  color: #fff;
+  display: block;
+  transition: 0.3s;
+  padding-top: 13px;
+  padding-bottom: 13px;
+  text-align: left;
+  padding-left: 24px;
+}
+/* / Main app body----------- / */
+
+.main-dashboard {
+  margin-left: 220px;
+  min-height: calc(100% - 60px);
+  height: 100%;
+  margin-top: 68px;
+}
+.wrap {
+  padding-top: 1.5rem;
+  padding-left: 3.5rem;
+  padding-right: 3.5rem;
+}
+.coins-count {
+  padding: 16px;
+  background-color: #fff;
+  margin-bottom: 3.5rem;
+  -webkit-box-shadow: 0 1px 2px #ccc;
+  box-shadow: 3px 2px 6px #ccc;
+  border-radius: 2px;
+}
+span.p-l {
+  margin: 0 5px;
+}
+span.bitscoin-tb {
+  margin: 0 5px;
+}
+.buycoin-form {
+  text-align: left;
+}
+.chart {
+  background-color: #fff;
+  margin-bottom: 3.5rem;
+  -webkit-box-shadow: 0 1px 2px #ccc;
+  box-shadow: 3px 2px 6px #ccc;
+  border-radius: 2px;
+}
+.chart-header {
+  padding: 1rem;
+}
+.chart-body {
+  padding: 20px;
+}
+.line {
+  border-right: 1px solid #ccc;
+}

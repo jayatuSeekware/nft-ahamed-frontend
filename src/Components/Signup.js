@@ -89,11 +89,11 @@ class Signup extends React.Component {
 
                                 <div className="pas-field">
                                     <input type={this.state.hidden ? 'password' : 'text'} placeholder="password" value={this.state.password} onChange={this.handlepassword}></input>
-                                    <i class="fa fa-eye" aria-hidden="true" onClick={this.toggleShow}></i>
+                                    <i className="fa fa-eye" aria-hidden="true" onClick={this.toggleShow}></i>
                                 </div>
                                 <div className="pas-field">
                                     <input type={this.state.hidden ? 'password' : 'text'} placeholder="Confirm password" value={this.state.confirmPass} onChange={this.handleconfirmpass}></input>
-                                    <i class="fa fa-eye" aria-hidden="true" onClick={this.toggleShow}></i>
+                                    <i className="fa fa-eye" aria-hidden="true" onClick={this.toggleShow}></i>
                                 </div>
                                 <input type="submit" className="fadeIn fourth" value="Sign Up" onClick={this.signup}></input>
                             </div>

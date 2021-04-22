@@ -9,6 +9,7 @@ import Signup from './Components/Signup'
 import Signin from './Components/Signin'
 import Createassets from './Components/Createasset'
 import Howto from './Components/howto'
+import Admindashboard from './Components/Admin/AdminDashboard'
 
 
 
@@ -26,6 +27,8 @@ function App() {
         <Route exact path="/Signin" component={Signin} />
         <Route exact path="/Createassets" component={Createassets} />
         <Route exact path="/howto" component={Howto} />
+        <Route exact path="/admindashboard" component={Admindashboard} />
+
       </Switch>
     </div>
   );

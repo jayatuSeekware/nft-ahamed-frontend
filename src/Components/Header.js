@@ -36,20 +36,20 @@ function Header() {
                         <img src={Logo} alt="logo"/>
                         </a>
                     </div>
-                    <div class="p-1 bg-light rounded rounded-pill shadow-sm search-box">
-                        <div class="input-group">
-                            <input type="search" placeholder="Search by creator, collectible or collection" aria-describedby="button-addon1" class="form-control border-0 bg-light"></input>
-                            <div class="input-group-append">
-                                <button id="button-addon1" type="submit" class="btn btn-link text-primary"><i class="fa fa-search"></i></button>
+                    <div className="p-1 bg-light rounded rounded-pill shadow-sm search-box">
+                        <div className="input-group">
+                            <input type="search" placeholder="Search by creator, collectible or collection" aria-describedby="button-addon1" className="form-control border-0 bg-light"></input>
+                            <div className="input-group-append">
+                                <button id="button-addon1" type="submit" className="btn btn-link text-primary"><i className="fa fa-search"></i></button>
                             </div>
                         </div>
                     </div>
-                    <ul class="nav header-menu">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/" >Explore</a>
+                    <ul className="nav header-menu">
+                        <li className="nav-item">
+                            <a className="nav-link" href="/" >Explore</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/howto"  target="_blank">How it works</a>
+                        <li className="nav-item">
+                            <a className="nav-link" href="/howto"  target="_blank">How it works</a>
                         </li>
 
                     </ul>

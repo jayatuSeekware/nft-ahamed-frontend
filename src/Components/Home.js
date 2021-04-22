@@ -77,7 +77,8 @@ class Home extends React.Component {
   //List of all data in table;
   getAllData = async () => {
     axios.get(api.API_URL + 'getalldata').then((listdata) => {
-      // console.log("getalldatalist", listdata.data.data)
+      console.log("getalldatalist", listdata.data.data)
+     
       this.setState({ dataList: listdata.data.data, soldstatus: listdata.data.data.soldStatus })
     }).catch((errs) => {
       // console.log("alldata_api_catchblock",errs)
@@ -96,13 +97,7 @@ class Home extends React.Component {
     }
   }
 
-  // Curosol---------
-
-
-
-
-
-
+  
   render() {
     return (
       <>
@@ -114,92 +109,96 @@ class Home extends React.Component {
               <div className="main-body">
 
                 {/* Test modal----------------- */}
-                
+
                 <div className="sellers-area">
-                <div className="seller-title">
+                  <div className="seller-title">
                     <h3 >New <span>Token 💥</span></h3>
                   </div>
-                  <Carousel 
-                responsive={responsive}
-                
-                >
-                {this.state.dataList.map(list => (
-                          list.soldStatus === "1" ? (
+                  <Carousel
+                    responsive={responsive}
 
-                            <div className="col-sm-3">
-                              <div className="assetfield"  >
-                                <div className="assetimage">
-                                  <img style={{ height: 200, width: 200 }} src={api.IPFS_URL + list.ipfsHash} alt="" />
-                                </div>
-                                <div className="assetdetail">
-                                  <h3 className="assetname">{list.assetName}</h3>
-                                  <p>Price: {list.price}</p>
-                                  <p>Status:Sold</p>
-                                </div>
+                  >
+                    {this.state.dataList.map(list => (
+                      list.soldStatus === "1" ? (
 
-                              </div>
+                        <div className="col-sm-3">
+                          <div className="assetfield"  >
+                            <div className="assetimage">
+                              <img style={{ height: 200, width: 200 }} src={api.IPFS_URL + list.ipfsHash} alt="" />
                             </div>
-                          ) : (
-                            <div className="col-sm-3">
-                              <div className="assetfield" onClick={() => this.notSoldClick(list.tokenId)} >
-                                <div className="assetimage">
-                                  <img style={{ height: 200, width: 200 }} src={api.IPFS_URL + list.ipfsHash} alt="" />
-                                </div>
-                                <div className="assetdetail">
-                                  <h3 className="assetname">{list.assetName}</h3>
-                                  <p>Price: {list.price}</p>
-                                  <p className="assetstatus">Status:Not sold</p>
-                                </div>
-                              </div>
+                            <div className="assetdetail">
+                              <h3 className="assetname">{list.assetName}</h3>
+                              <p>Price: {list.price}</p>
+                              <p>Status:Sold</p>
                             </div>
-                          )
-                        ))}
-                </Carousel>
+
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="col-sm-3">
+                          <div className="assetfield" onClick={() => this.notSoldClick(list.tokenId)} >
+                            <div className="assetimage">
+                              <img style={{ height: 200, width: 200 }} src={api.IPFS_URL + list.ipfsHash} alt="" />
+                            </div>
+                            <div className="assetdetail">
+                              <h3 className="assetname">{list.assetName}</h3>
+                              <p>Price: {list.price}</p>
+                              <p className="assetstatus">Status:Not sold</p>
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    ))}
+                  </Carousel>
                 </div>
 
                 {/* Test modal end----------------- */}
 
-                
+
                 {/* HOT Nft seller start----------------- */}
                 <div className="sellers-area">
-                <div className="seller-title">
+                  <div className="seller-title">
                     <h3 >Hot <span>NFT 🔥</span></h3>
                   </div>
-                  <Carousel 
-                responsive={responsive}
-                >
-                {this.state.dataList.map(list => (
-                          list.soldStatus === "1" ? (
+                  <Carousel
+                    responsive={responsive}
+                  >
+                    {this.state.dataList.map(list => (
+                      list.soldStatus === "1" ? (
 
-                            <div className="col-sm-3">
-                              <div className="assetfield"  >
-                                <div className="assetimage">
-                                  <img style={{ height: 200, width: 200 }} src={api.IPFS_URL + list.ipfsHash} alt="" />
-                                </div>
-                                <div className="assetdetail">
-                                  <h3 className="assetname">{list.assetName}</h3>
-                                  <p>Price: {list.price}</p>
-                                  <p>Status:Sold</p>
-                                </div>
+                        <div className="col-sm-3">
+                          <div className="assetfield"  >
+                            <div className="assetimage">
+                              <img style={{ height: 200, width: 200 }} src={api.IPFS_URL + list.ipfsHash} alt="" />
+                            </div>
+                            <div className="assetdetail">
+                              <h3 className="assetname">{list.assetName}</h3>
+                              <p>Price: {list.price}</p>
+                              <p>Status:Sold</p>
+                            </div>
 
-                              </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="col-sm-3">
+                          <div className="assetfield" onClick={() => this.notSoldClick(list.tokenId)} >
+                            <div className="assetimage">
+                              <img style={{ height: 200, width: 200 }} src={api.IPFS_URL + list.ipfsHash} alt="" />
+                              <video width="200" height="200" controls >
+                                
+                                <source src={api.IPFS_URL+"Qmf484Qihsf9tNgKRi6nD21YiqHrkd4q9HLPGJhHJ5KboZ"} type="video/mp4" />
+                              </video>
                             </div>
-                          ) : (
-                            <div className="col-sm-3">
-                              <div className="assetfield" onClick={() => this.notSoldClick(list.tokenId)} >
-                                <div className="assetimage">
-                                  <img style={{ height: 200, width: 200 }} src={api.IPFS_URL + list.ipfsHash} alt="" />
-                                </div>
-                                <div className="assetdetail">
-                                  <h3 className="assetname">{list.assetName}</h3>
-                                  <p>Price: {list.price}</p>
-                                  <p className="assetstatus">Status:Not sold</p>
-                                </div>
-                              </div>
+                            <div className="assetdetail">
+                              <h3 className="assetname">{list.assetName}</h3>
+                              <p>Price: {list.price}</p>
+                              <p className="assetstatus">Status:Not sold</p>
                             </div>
-                          )
-                        ))}
-                </Carousel>
+                          </div>
+                        </div>
+                      )
+                    ))}
+                  </Carousel>
                 </div>
                 {/* HOT Nft seller end----------------- */}
                 {/* Explore area start--------- */}
@@ -211,15 +210,15 @@ class Home extends React.Component {
                         <h3 >Explore ⚡<span> </span></h3>
                       </div>
                       <div className="col-sm-9">
-                        <ul class="nav explore-menu">
-                          <li class="nav-item">
-                            <a class="nav-link active" href="#">All</a>
+                        <ul className="nav explore-menu">
+                          <li className="nav-item">
+                            <a className="nav-link active" href="#">All</a>
                           </li>
-                          <li class="nav-item">
-                            <a class="nav-link" href="#">📸 Photography</a>
+                          <li className="nav-item">
+                            <a className="nav-link" href="#">📸 Photography</a>
                           </li>
-                          <li class="nav-item">
-                            <a class="nav-link" href="#">🎵 Music</a>
+                          <li className="nav-item">
+                            <a className="nav-link" href="#">🎵 Music</a>
                           </li>
 
                         </ul>
