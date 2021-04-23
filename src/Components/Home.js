@@ -184,10 +184,6 @@ class Home extends React.Component {
                           <div className="assetfield" onClick={() => this.notSoldClick(list.tokenId)} >
                             <div className="assetimage">
                               <img style={{ height: 200, width: 200 }} src={api.IPFS_URL + list.ipfsHash} alt="" />
-                              <video width="200" height="200" controls >
-                                
-                                <source src={api.IPFS_URL+"Qmf484Qihsf9tNgKRi6nD21YiqHrkd4q9HLPGJhHJ5KboZ"} type="video/mp4" />
-                              </video>
                             </div>
                             <div className="assetdetail">
                               <h3 className="assetname">{list.assetName}</h3>

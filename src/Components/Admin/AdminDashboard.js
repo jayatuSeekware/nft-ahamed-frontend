@@ -151,7 +151,7 @@ class Admindashboard extends React.Component {
                                                                         <td>{list.tokenId}</td>
                                                                         <td>{list.owner}</td>
                                                                         <td>{list.price}</td>
-                                                                        <Switch value={i} onChange={this.handleChange.bind(this,list._id,i)} checked={this.state.checked} />
+                                                                        <Switch onChange={this.handleChange.bind(this,list._id,i)} checked={this.state.checked} />
 
                                                                         {/* <button onClick={() => this.hide(list._id,i)}>Hide</button> */}
 
