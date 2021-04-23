@@ -2,10 +2,13 @@ import React from 'react';
 import axios from 'axios';
 import api from '../../api'
 import Switch from "react-switch";
+import DataTable from 'react-data-table-component';
+
 
 // import { id } from '@ethersproject/hash';
 
 
+const data = [{ id: 1, title: 'Conan the Barbarian', year: '1982' } ,{ id: 2, title: ' the Barbarian', year: '1983' }];
 
 
 
@@ -17,12 +20,83 @@ class Admindashboard extends React.Component {
         super(props);
         this.state = {
             dataList: [],
-            soldstatus: "",
+            soldstatus: true,
             notListedDataList: [],
-            checked:true
-            
+            checked:true,
+                columns : [
+                   {
+                     name: 'email',
+                     selector: 'email',
+                   },
+                   {
+                     name: 'AssetName',
+                     selector: 'assetName',
+                     sortable: true,
+                   },
+                   {
+                     name: 'NftTokenId',
+                     selector: 'tokenId',
+                   },
+                   {
+                     name: 'OwnerAddress',
+                     selector: 'owner',
+                   },
+                   {
+                     name: 'Price',
+                     selector: 'price',
+                   },
+                   {
+                     name: 'Sold Status',
+                     selector: 'soldStatus',
+                 
+                   },
+                   {
+                       name: "Hide/Show",
+                       selector: 'hide',
+                       cell: row => 
+                       <div onClick={()=> this.handleonclick(row._id,row.hide)}>
+                         {row.hide}
+                       </div>
+                 
+                   }
+                 ]
+               
         };
         this.handleChange = this.handleChange.bind(this);
+
+    }
+
+    setTableData = () =>{
+        
+    }
+
+    handleonclick=(item,stats)=>{
+console.log("item handle on click---",item,stats);
+
+        if(stats === "Hidden"){
+            console.log("item 1",item,stats);
+
+
+            axios.post(api.API_URL + "updatelisteddata", { "id": item ,"status": "Not-Hidden"}).then((resp) => {
+                console.log("resp>>>>>>>>>>>",resp)
+                 this.getAllListedData()
+
+            }).catch((err) => {
+                console.log("errors", err)
+            })
+        }
+        else{
+            console.log("item 2",item,stats);
+
+            axios.post(api.API_URL + "updatelisteddata", { "id": item ,"status": "Hidden"}).then((resp) => {
+                console.log("resp>>>>>>>>>>>",resp)
+                 this.getAllListedData()
+
+            }).catch((err) => {
+                console.log("errors", err)
+            })
+        }
+
     }
 
     async componentDidMount() {
@@ -43,11 +117,16 @@ class Admindashboard extends React.Component {
 
 
 
+
     //List of all data in table;
     getAllListedData = async () => {
         axios.get(api.API_URL + 'getalldata').then((listdata) => {
-            // console.log("getalldatalist", listdata.data.data)
-            this.setState({ dataList: listdata.data.data, soldstatus: listdata.data.data.soldStatus })
+             console.log("getalldatalist", listdata.data.data)
+             this.setState({ dataList: listdata.data.data, soldstatus: listdata.data.data.soldStatus },()=>{
+
+                 this.setTableData();
+             })
+
         }).catch((errs) => {
             // console.log("alldata_api_catchblock", errs)
         })
@@ -63,8 +142,8 @@ class Admindashboard extends React.Component {
     }
 
     handleChange(id,i,checked) {
-        this.setState({ checked });
-        console.log("iddddd=====",id, i,this.state.checked)
+        //this.setState({ checked });
+       console.log("iddddd=====",id, i,this.state.checked)
 
 
       }
@@ -127,42 +206,14 @@ class Admindashboard extends React.Component {
                                     <div className="col-md-12 col-sm-12">
                                         <div className="coins-count">
                                             <div className="text-center">
-                                                <h3> Listed Tokens For Sale</h3>
-                                                <table className="table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>UserEmail</th>
-                                                            <th>AssetName</th>
-                                                            <th>NftTokenId</th>
-                                                            <th>Owner</th>
-                                                            <th>Price</th>
 
-                                                        </tr>
-                                                    </thead>
-                                                    {
-                                                        this.state.dataList.map((list, i) => {
-                                                            console.log("allnotlisteddatatable", list, i)
-                                                            return (
 
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td>{list.email}</td>
-                                                                        <td>{list.assetName}</td>
-                                                                        <td>{list.tokenId}</td>
-                                                                        <td>{list.owner}</td>
-                                                                        <td>{list.price}</td>
-                                                                        <Switch onChange={this.handleChange.bind(this,list._id,i)} checked={this.state.checked} />
+                                                <DataTable
+                                                title="Listed Tokens For Sale"
+                                                columns={this.state.columns}
+                                                data={this.state.dataList}
+                                            />
 
-                                                                        {/* <button onClick={() => this.hide(list._id,i)}>Hide</button> */}
-
-                                                                        {/* <button onClick={() => this.show(list._id)}>Show</button> */}
-
-                                                                    </tr>
-                                                                </tbody>
-                                                            );
-                                                        })
-                                                    }
-                                                </table>
                                             </div>
 
                                         </div>
