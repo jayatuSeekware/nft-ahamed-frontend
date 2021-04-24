@@ -120,7 +120,7 @@ console.log("item handle on click---",item,stats);
 
     //List of all data in table;
     getAllListedData = async () => {
-        axios.get(api.API_URL + 'getalldata').then((listdata) => {
+        axios.get(api.API_URL + 'getalldataforAdmin').then((listdata) => {
              console.log("getalldatalist", listdata.data.data)
              this.setState({ dataList: listdata.data.data, soldstatus: listdata.data.data.soldStatus },()=>{
 
