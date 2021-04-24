@@ -55,7 +55,9 @@ class Admindashboard extends React.Component {
                     selector: 'hide',
                     cell: row =>
                         <div onClick={() => this.handleonclick(row._id, row.hide)}>
-                            {row.hide}
+                            <button style={{width:120,fontSize:13}} className=" btn btn-primary">
+                                {row.hide}
+                            </button>
                         </div>
 
                 }
@@ -75,8 +77,6 @@ class Admindashboard extends React.Component {
 
         if (stats === "Hidden") {
             console.log("item 1", item, stats);
-
-
             axios.post(api.API_URL + "updatelisteddata", { "id": item, "status": "Not-Hidden" }).then((resp) => {
                 console.log("resp>>>>>>>>>>>", resp)
                 this.getAllListedData()
@@ -120,7 +120,7 @@ class Admindashboard extends React.Component {
 
     //List of all data in table;
     getAllListedData = async () => {
-        axios.get(api.API_URL + 'getalldata').then((listdata) => {
+        axios.get(api.API_URL + 'getalldataforAdmin').then((listdata) => {
             console.log("getalldatalist", listdata.data.data)
             this.setState({ dataList: listdata.data.data, soldstatus: listdata.data.data.soldStatus }, () => {
 
