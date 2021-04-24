@@ -8,7 +8,7 @@ import DataTable from 'react-data-table-component';
 // import { id } from '@ethersproject/hash';
 
 
-const data = [{ id: 1, title: 'Conan the Barbarian', year: '1982' } ,{ id: 2, title: ' the Barbarian', year: '1983' }];
+const data = [{ id: 1, title: 'Conan the Barbarian', year: '1982' }, { id: 2, title: ' the Barbarian', year: '1983' }];
 
 
 
@@ -16,81 +16,81 @@ const data = [{ id: 1, title: 'Conan the Barbarian', year: '1982' } ,{ id: 2, ti
 class Admindashboard extends React.Component {
 
     constructor(props) {
-        
+
         super(props);
         this.state = {
             dataList: [],
             soldstatus: true,
             notListedDataList: [],
-            checked:true,
-                columns : [
-                   {
-                     name: 'email',
-                     selector: 'email',
-                   },
-                   {
-                     name: 'AssetName',
-                     selector: 'assetName',
-                     sortable: true,
-                   },
-                   {
-                     name: 'NftTokenId',
-                     selector: 'tokenId',
-                   },
-                   {
-                     name: 'OwnerAddress',
-                     selector: 'owner',
-                   },
-                   {
-                     name: 'Price',
-                     selector: 'price',
-                   },
-                   {
-                     name: 'Sold Status',
-                     selector: 'soldStatus',
-                 
-                   },
-                   {
-                       name: "Hide/Show",
-                       selector: 'hide',
-                       cell: row => 
-                       <div onClick={()=> this.handleonclick(row._id,row.hide)}>
-                         {row.hide}
-                       </div>
-                 
-                   }
-                 ]
-               
+            checked: true,
+            columns: [
+                {
+                    name: 'email',
+                    selector: 'email',
+                },
+                {
+                    name: 'AssetName',
+                    selector: 'assetName',
+                    sortable: true,
+                },
+                {
+                    name: 'NftTokenId',
+                    selector: 'tokenId',
+                },
+                {
+                    name: 'OwnerAddress',
+                    selector: 'owner',
+                },
+                {
+                    name: 'Price',
+                    selector: 'price',
+                },
+                {
+                    name: 'Sold Status',
+                    selector: 'soldStatus',
+
+                },
+                {
+                    name: "Hide/Show",
+                    selector: 'hide',
+                    cell: row =>
+                        <div onClick={() => this.handleonclick(row._id, row.hide)}>
+                            {row.hide}
+                        </div>
+
+                }
+            ]
+
         };
         this.handleChange = this.handleChange.bind(this);
 
     }
 
-    setTableData = () =>{
-        
+    setTableData = () => {
+
     }
 
-    handleonclick=(item,stats)=>{
-console.log("item handle on click---",item,stats);
+    handleonclick = (item, stats) => {
+        console.log("item handle on click---", item, stats);
 
-        if(stats === "Hidden"){
-            console.log("item 1",item,stats);
+        if (stats === "Hidden") {
+            console.log("item 1", item, stats);
 
 
-            axios.post(api.API_URL + "updatelisteddata", { "id": item ,"status": "Not-Hidden"}).then((resp) => {
-                console.log("resp>>>>>>>>>>>",resp)
-                 this.getAllListedData()
+            axios.post(api.API_URL + "updatelisteddata", { "id": item, "status": "Not-Hidden" }).then((resp) => {
+                console.log("resp>>>>>>>>>>>", resp)
+                this.getAllListedData()
 
             }).catch((err) => {
                 console.log("errors", err)
             })
         }
-        else{
-            console.log("item 2",item,stats);
+        else {
+            console.log("item 2", item, stats);
 
-            axios.post(api.API_URL + "updatelisteddata", { "id": item ,"status": "Hidden"}).then((resp) => {
-                console.log("resp>>>>>>>>>>>",resp)
-                 this.getAllListedData()
+            axios.post(api.API_URL + "updatelisteddata", { "id": item, "status": "Hidden" }).then((resp) => {
+                console.log("resp>>>>>>>>>>>", resp)
+                this.getAllListedData()
 
             }).catch((err) => {
                 console.log("errors", err)
@@ -121,19 +121,19 @@ console.log("item handle on click---",item,stats);
     //List of all data in table;
     getAllListedData = async () => {
         axios.get(api.API_URL + 'getalldata').then((listdata) => {
-             console.log("getalldatalist", listdata.data.data)
-             this.setState({ dataList: listdata.data.data, soldstatus: listdata.data.data.soldStatus },()=>{
+            console.log("getalldatalist", listdata.data.data)
+            this.setState({ dataList: listdata.data.data, soldstatus: listdata.data.data.soldStatus }, () => {
 
-                 this.setTableData();
-             })
+                this.setTableData();
+            })
 
         }).catch((errs) => {
             // console.log("alldata_api_catchblock", errs)
         })
     }
 
-    hide = (id,i) => {
-        console.log("iddddd=====",id, i,this.state.checked)
+    hide = (id, i) => {
+        console.log("iddddd=====", id, i, this.state.checked)
         // axios.post(api.API_URL + "updatelisteddata", { "id": id }).then((resp) => {
         //     console.log("resp>>>>>>>>>>>",resp)
         // }).catch((err) => {
@@ -141,16 +141,18 @@ console.log("item handle on click---",item,stats);
         // })
     }
 
-    handleChange(id,i,checked) {
+    handleChange(id, i, checked) {
         //this.setState({ checked });
-       console.log("iddddd=====",id, i,this.state.checked)
+        console.log("iddddd=====", id, i, this.state.checked)
 
 
-      }
+    }
 
-    // show = (id) => {
-    //     console.log("id++++++++", id)
-    // }
+    logout = () => {
+        console.log("id++++++++")
+        sessionStorage.clear()
+        this.props.history.push('/Signin')
+    }
 
     render() {
         return (
@@ -176,7 +178,7 @@ console.log("item handle on click---",item,stats);
 
                         <div className="collapse navbar-collapse justify-content-end navMenu">
                             <div className="nav-side-icon">
-                                <button className="btn blue-btn"></button>
+                                <button className="btn blue-btn" onClick={this.logout}>Logout</button>
                                 <span><i className="fas fa-bell"></i></span>
                                 <span><i className="fas fa-cog"></i></span>
                             </div>
@@ -209,10 +211,10 @@ console.log("item handle on click---",item,stats);
 
 
                                                 <DataTable
-                                                title="Listed Tokens For Sale"
-                                                columns={this.state.columns}
-                                                data={this.state.dataList}
-                                            />
+                                                    title="Listed Tokens For Sale"
+                                                    columns={this.state.columns}
+                                                    data={this.state.dataList}
+                                                />
 
                                             </div>
 
