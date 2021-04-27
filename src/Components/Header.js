@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useHistory } from "react-router-dom";
 import swal from 'sweetalert';
 import Logo from '../images/nlogo.jpg';
@@ -7,6 +7,24 @@ import Logo from '../images/nlogo.jpg';
 var jwttoken;
 
 function Header() {
+    const [searchValue, setSearchValue] = useState("");
+
+    const handleSearchInputChanges = (e) => {
+        setSearchValue(e.target.value);
+    }
+
+    const resetInputField = () => {
+        setSearchValue("")
+    }
+
+    const callSearchFunction = (e) => {
+        e.preventDefault();
+        // props.search(searchValue);
+        resetInputField();
+    }
+
+
+
     jwttoken = sessionStorage.getItem("token")
     // console.log("inside header==========", jwttoken);
     const history = useHistory();
@@ -33,14 +51,19 @@ function Header() {
                 <div className="container">
                     <div className="d-flex justify-content-end justify-content-lg-start pt-1 pt-lg-0">
                         <a className="navbar-brand" href="/">
-                        <img src={Logo} alt="logo"/>
+                            <img src={Logo} alt="logo" />
                         </a>
                     </div>
                     <div className="p-1 bg-light rounded rounded-pill shadow-sm search-box">
                         <div className="input-group">
-                            <input type="search" placeholder="Search by creator, collectible or collection" aria-describedby="button-addon1" className="form-control border-0 bg-light"></input>
+                            <input type="text"
+                                placeholder="Search by collectable name"
+                                aria-describedby="button-addon1"
+                                className="form-control border-0 bg-light"
+                                value={searchValue}
+                                onChange={handleSearchInputChanges} />
                             <div className="input-group-append">
-                                <button id="button-addon1" type="submit" className="btn btn-link text-primary"><i className="fa fa-search"></i></button>
+                                <button id="button-addon1" onClick={callSearchFunction} className="btn btn-link text-primary"><i className="fa fa-search"></i></button>
                             </div>
                         </div>
                     </div>
@@ -49,7 +72,7 @@ function Header() {
                             <a className="nav-link" href="/" >Explore</a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="/howto"  target="_blank">How it works</a>
+                            <a className="nav-link" href="/howto" target="_blank">How it works</a>
                         </li>
 
                     </ul>

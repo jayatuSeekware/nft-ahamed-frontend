@@ -136,8 +136,6 @@ class Createassets extends React.Component {
 
                         console.log('getTokenidresponse', newTokenID)
 
-                        console.log("elsecase")
-
                         var tokenId = newTokenID
                         self.state.contract.methods.mint(this.state.assetName, this.state.ipfsHash).send({ from: this.state.account })
                             .once('receipt', (receipt) => {
@@ -239,7 +237,7 @@ class Createassets extends React.Component {
                                 <td><input type="text" placeholder="Asset Name" value={this.state.assetName} onChange={this.handleAssetName} /></td>
                             </tr>
                             <tr>
-                                <td><input type="text" placeholder="Price" value={this.state.price} onChange={this.handlePrice} /></td>
+                                <td><input type="text" placeholder="Price in ETH" value={this.state.price} onChange={this.handlePrice} /></td>
                             </tr>
                             <tr>
                                 <td style={{ textAlign: "center" }}>

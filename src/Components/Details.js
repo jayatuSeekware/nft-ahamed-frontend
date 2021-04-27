@@ -5,7 +5,7 @@ import config from '../config'
 import '../App.css';
 // import Modal from 'react-modal';
 // import QRCode from "react-qr-code";
-import { ethers } from "ethers";
+import { errors, ethers } from "ethers";
 import Web3 from 'web3';
 import Loading from 'react-fullscreen-loading';
 import swal from 'sweetalert';
@@ -41,7 +41,7 @@ class Details extends React.Component {
             dataList: [],
             imageName: "",
             newModel: false,
-            ethadd: "",
+            ethadd: "0x93b8d57D2CECdC0Fd485CFCD7fB965D575445DcB",
             transHash: "",
             soldstatus: "",
             visible: false,
@@ -126,8 +126,6 @@ class Details extends React.Component {
     buyToken = () => {
         this.setState({ loader: true })
         var self = this;
-        const ethaddress = "0x1dC1f4b7959aB8955836282E28524DE41A9975Bd"
-        this.setState({ ethadd: ethaddress })
         var price = (this.state.price).toString();
         const { web3 } = window
         this.state.contract.methods.ownerOf(this.state.tokenId).call().then((tokenOwner) => {
@@ -137,19 +135,35 @@ class Details extends React.Component {
                     swal({ title: "token owner and token buyer can't be same", icon: "error" })
                     self.setState({ loader: false })
                 } else {
-                    web3.eth.sendTransaction(
-                        {
-                            from: result[0],
-                            to: ethaddress,
-                            value: web3.utils.toWei(price, 'ether'),
-                            data: ""
-                        }, function (err, transactionHash) {
-                            if (!err)
-                                // console.log("transhash", transactionHash);
-                            if (transactionHash) {
+
+                    web3.eth.getBalance(result[0]).then((value) => {
+                        console.log("value", web3.utils.fromWei(value, 'ether')
+                        )
+                        var balance = web3.utils.fromWei(value, 'ether')
+                        if (balance < price) {
+                            swal({ title: "Insufficient Balance!", icon: "error" });
+                            self.setState({loader:false})
+                        } else {
+
+                            web3.eth.sendTransaction(
+                                {
+                                    from: result[0],
+                                    to: self.state.ethadd,
+                                    value: web3.utils.toWei(price, 'ether'),
+                                    data: ""
+                                }, function (err, transactionHash) {
+
                                 self.paymentMethod(transactionHash, result[0]);
-                            }
-                        });
+                            
+
+                            });
+
+                        }
+                    }).catch((errorss) => {
+                        console.log("====errors", errorss)
+                    })
+
+
                 }
             });
         }).catch((err) => {
@@ -175,14 +189,24 @@ class Details extends React.Component {
         // console.log(txhash, "hash&tokenid", tokenid);
         const provider = new ethers.providers.JsonRpcProvider('https://rinkeby.infura.io/v3/f99366737d854f5e91ab29dad087fcd5');
 
+
+
+
+
         provider.getTransaction(txhash).then((transaction) => {
             // console.log("transdetails", transaction.from, transaction.to);
             let paidprice = transaction.value.toString() / 1E18;
-            // let sendtoadd = transaction.to;
+            let sendtoadd = (transaction.to).toLowerCase();
+            console.log("sendtoadd", sendtoadd, this.state.ethadd)
+
+            if (sendtoadd !== (this.state.ethadd).toLowerCase()) {
+                swal({ title: "Receiver address is wrong!", icon: "error" })
+            }
             if (payamout !== paidprice) {
                 swal({ title: "Please pay required amount.", icon: "error" })
                 this.setState({ loader: false })
             } else {
+                
                 const options = {
                     headers: { 'authtoken': token }
                 };
