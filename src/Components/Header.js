@@ -6,15 +6,33 @@ import Logo from '../images/nlogo.jpg';
 
 var jwttoken;
 
-function Header() {
-    const [searchValue, setSearchValue] = useState("");
+const people = [
+    "Siri",
+    "Alexa",
+    "Google",
+    "Facebook",
+    "Twitter",
+    "Linkedin",
+    "Sinkedin"
+  ];
 
-    const handleSearchInputChanges = (e) => {
-        setSearchValue(e.target.value);
-    }
+function Header(props) {
+    console.log("props header-----",props);
+    const [searchTerm, setSearchTerm] = React.useState("");
+ const [searchResults, setSearchResults] = React.useState([]);
+ const handleChange = event => {
+    setSearchTerm(event.target.value);
+  };
+ React.useEffect(() => {
+    const results = people.filter(person =>
+      person.toLowerCase().includes(searchTerm)
+    );
+    setSearchResults(results);
+  }, [searchTerm]);
+
 
     const resetInputField = () => {
-        setSearchValue("")
+       // setSearchValue("")
     }
 
     const callSearchFunction = (e) => {
@@ -60,11 +78,20 @@ function Header() {
                                 placeholder="Search by collectable name"
                                 aria-describedby="button-addon1"
                                 className="form-control border-0 bg-light"
-                                value={searchValue}
-                                onChange={handleSearchInputChanges} />
-                            <div className="input-group-append">
+                                value={searchTerm}
+                                onChange={handleChange} />
+
+                               
+
+                            {/* <div className="input-group-append">
                                 <button id="button-addon1" onClick={callSearchFunction} className="btn btn-link text-primary"><i className="fa fa-search"></i></button>
-                            </div>
+                            </div> */}
+
+                            {/* <ul>
+                                        {searchResults.map(item => (
+                                        <li>{item}</li>
+                                        ))}
+                                    </ul> */}
                         </div>
                     </div>
                     <ul className="nav header-menu">

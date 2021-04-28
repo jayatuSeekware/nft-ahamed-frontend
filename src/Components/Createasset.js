@@ -100,7 +100,7 @@ class Createassets extends React.Component {
 
     generateNftToken = async () => {
 
-        const ownerethaddress = "0x93b8d57D2CECdC0Fd485CFCD7fB965D575445DcB"
+        const ownerethaddress = config.Platform_address;
 
         var email = localStorage.getItem("currentUserEmail")
         var token = sessionStorage.getItem('token')

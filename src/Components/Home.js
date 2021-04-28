@@ -123,7 +123,7 @@ class Home extends React.Component {
   render() {
     return (
       <>
-        <Header />
+        <Header dataList={this.state.dataList}/>
         <div className="container">
           <div style={{ textAlign: "center", marginTop: "75px" }}>
             {this.state.loader ? (<Loading loading background="#ffffff00" loaderColor="#3498db" />) : (

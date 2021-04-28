@@ -41,7 +41,7 @@ class Details extends React.Component {
             dataList: [],
             imageName: "",
             newModel: false,
-            ethadd: "0x93b8d57D2CECdC0Fd485CFCD7fB965D575445DcB",
+            ethadd: config.Platform_address,
             transHash: "",
             soldstatus: "",
             visible: false,
