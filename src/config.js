@@ -1,3 +1,3 @@
 module.exports = {
-    Contract_address : "0x107882DBD3d96f3eCF8867CdC1Ad0779b81E85c7"
+    Contract_address : "0x8e71c24EE848Ded02a2d02b490dAB8bEeF99B1ec"
 }
