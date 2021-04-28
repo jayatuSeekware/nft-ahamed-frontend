@@ -5,12 +5,34 @@ import Switch from "react-switch";
 import DataTable from 'react-data-table-component';
 
 
-// import { id } from '@ethersproject/hash';
-
 
 const data = [{ id: 1, title: 'Conan the Barbarian', year: '1982' }, { id: 2, title: ' the Barbarian', year: '1983' }];
 
-
+const customStyles = {
+    title: {
+        style: {
+          alignItem:'centre',
+          color:'#fff'
+        }
+    },
+    rows: {
+        style: {
+            minHeight: '50px', // override the row height
+        }
+    },
+    headCells: {
+        style: {
+            paddingLeft: '25px', // override the cell padding for head cells
+            paddingRight: '25px',
+        },
+    },
+    cells: {
+        style: {
+            paddingLeft: '24px', // override the cell padding for data cells
+            paddingRight: '24px',
+        },
+    },
+};
 
 
 class Admindashboard extends React.Component {
@@ -24,6 +46,64 @@ class Admindashboard extends React.Component {
             notListedDataList: [],
             checked: true,
             columns: [
+                {
+                    name: 'Email',
+                    selector: 'email',
+                },
+                {
+                    name: 'AssetName',
+                    selector: 'assetName',
+                    sortable: true,
+                },
+                {
+                    name: 'NftTokenId',
+                    selector: 'tokenId',
+                },
+                {
+                    name: 'OwnerAddress',
+                    selector: 'owner',
+                },
+                {
+                    name: 'NewOwnerAddress',
+                    selector: 'newOwnerAddrress'
+                },
+                {
+                    name: 'Price',
+                    selector: 'price',
+                },
+
+                {
+                    name: 'PlatformFee',
+                    selector: 'platformfees'
+                },
+                {
+                    name: 'TransactionFee',
+                    selector: 'transactionfee'
+
+                },
+                {
+                    name: 'AmountSentToTokenOwner',
+                    selector: 'amtSendToTokenOwner'
+                },
+                {
+                    name: 'Sold Status',
+                    selector: 'soldStatus',
+
+                },
+                {
+                    name: "Hide/Show",
+                    selector: 'hide',
+                    cell: row =>
+                        <div onClick={() => this.handleonclick(row._id, row.hide)}>
+                            <button style={{ width: 120, fontSize: 13 }} className=" btn btn-primary">
+                                {row.hide}
+                            </button>
+                        </div>
+
+                }
+            ],
+
+            columnnotlisted: [
                 {
                     name: 'email',
                     selector: 'email',
@@ -49,18 +129,8 @@ class Admindashboard extends React.Component {
                     name: 'Sold Status',
                     selector: 'soldStatus',
 
-                },
-                {
-                    name: "Hide/Show",
-                    selector: 'hide',
-                    cell: row =>
-                        <div onClick={() => this.handleonclick(row._id, row.hide)}>
-                            <button style={{width:120,fontSize:13}} className=" btn btn-primary">
-                                {row.hide}
-                            </button>
-                        </div>
-
                 }
+
             ]
 
         };
@@ -76,6 +146,8 @@ class Admindashboard extends React.Component {
         console.log("item handle on click---", item, stats);
 
         if (stats === "Hidden") {
+
+
             console.log("item 1", item, stats);
             axios.post(api.API_URL + "updatelisteddata", { "id": item, "status": "Not-Hidden" }).then((resp) => {
                 console.log("resp>>>>>>>>>>>", resp)
@@ -99,24 +171,14 @@ class Admindashboard extends React.Component {
 
     }
 
+
+
     async componentDidMount() {
         await this.getAllListedData()
         await this.getAllNotListedData()
 
 
     }
-
-    getAllNotListedData = async () => {
-        axios.get(api.API_URL + 'getallnotlisteddata').then((notlisteddata) => {
-            // console.log("getallnotlisteddata", notlisteddata.data.data)
-            this.setState({ notListedDataList: notlisteddata.data.data })
-        }).catch((errs) => {
-            // console.log("alldata_api_catchblock", errs)
-        })
-    }
-
-
-
 
     //List of all data in table;
     getAllListedData = async () => {
@@ -127,6 +189,15 @@ class Admindashboard extends React.Component {
                 this.setTableData();
             })
 
+        }).catch((errs) => {
+            // console.log("alldata_api_catchblock", errs)
+        })
+    }
+
+    getAllNotListedData = async () => {
+        axios.get(api.API_URL + 'getallnotlisteddata').then((notlisteddata) => {
+            // console.log("getallnotlisteddata", notlisteddata.data.data)
+            this.setState({ notListedDataList: notlisteddata.data.data })
         }).catch((errs) => {
             // console.log("alldata_api_catchblock", errs)
         })
@@ -214,6 +285,7 @@ class Admindashboard extends React.Component {
                                                     title="Listed Tokens For Sale"
                                                     columns={this.state.columns}
                                                     data={this.state.dataList}
+                                                    customStyles={customStyles}
                                                 />
 
                                             </div>
@@ -223,39 +295,11 @@ class Admindashboard extends React.Component {
                                     <div className="col-md-12 col-sm-12">
                                         <div className="coins-count">
                                             <div className="text-center">
-                                                <h3>Non Listed Token </h3>
-                                                <table className="table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>UserEmail</th>
-                                                            <th>AssetName</th>
-                                                            <th>NftTokenId</th>
-                                                            <th>Owner</th>
-                                                            <th>Price</th>
-
-                                                        </tr>
-                                                    </thead>
-                                                    {
-                                                        this.state.notListedDataList.map(list => {
-                                                            console.log("allnotlisteddatatable", list)
-                                                            return (
-
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td>{list.email}</td>
-                                                                        <td>{list.assetName}</td>
-                                                                        <td>{list.tokenId}</td>
-                                                                        <td>{list.owner}</td>
-                                                                        <td>{list.price}</td>
-
-
-                                                                    </tr>
-                                                                </tbody>
-                                                            );
-
-                                                        })
-                                                    }
-                                                </table>
+                                                <DataTable
+                                                    title="Not Listed Tokens"
+                                                    columns={this.state.columnnotlisted}
+                                                    data={this.state.notListedDataList}
+                                                />
                                             </div>
                                         </div>
                                     </div>

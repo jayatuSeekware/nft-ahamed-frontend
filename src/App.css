@@ -623,3 +623,14 @@ span.bitscoin-tb {
 .line {
   border-right: 1px solid #ccc;
 }
+.react-multiple-carousel__arrow {
+  background: rgb(0, 163, 255) !important;
+  border: 2px solid #fff !important;
+  border-radius: 0px !important;
+}
+.react-multiple-carousel__arrow--right {
+  right: calc(0% + 1px) !important;
+}
+.react-multiple-carousel__arrow--left {
+  left: calc(1% + 1px) !important;
+}

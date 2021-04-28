@@ -5,6 +5,7 @@ import React from 'react';
 import '../App.css';
 import api from '../api'
 import Header from './Header';
+import Web3 from 'web3';
 import axios from 'axios';
 import Loading from 'react-fullscreen-loading';
 import swal from 'sweetalert';
@@ -68,9 +69,30 @@ class Home extends React.Component {
 
 
   async componentDidMount() {
-    await this.getAllData()
+    await this.getAllData();
+    await this.loadWeb3();
 
   }
+
+  loadWeb3 = async () => {
+    try {
+        if (window.ethereum) {
+            window.web3 = new Web3(window.ethereum)
+            await window.ethereum.enable()
+        }
+        else if (window.web3) {
+            window.web3 = new Web3(window.web3.currentProvider)
+        }
+        else {
+            window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
+        }
+    } catch (err) {
+        // console.log("loadweb3catchblock", err)
+        swal({ title: "please install metamask", icon: "error" })
+    }
+
+
+};
 
 
 
@@ -101,7 +123,7 @@ class Home extends React.Component {
   render() {
     return (
       <>
-        <Header />
+        <Header dataList={this.state.dataList}/>
         <div className="container">
           <div style={{ textAlign: "center", marginTop: "75px" }}>
             {this.state.loader ? (<Loading loading background="#ffffff00" loaderColor="#3498db" />) : (
