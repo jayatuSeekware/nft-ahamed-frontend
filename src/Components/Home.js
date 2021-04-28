@@ -115,7 +115,7 @@ class Home extends React.Component {
         tokenID: data
       })
     } else {
-      swal({ title: "Unauthrized access! Login first", icon: "error" })
+      swal({ title: "Unauthorized access! Login first", icon: "error" })
     }
   }
 
@@ -123,7 +123,7 @@ class Home extends React.Component {
   render() {
     return (
       <>
-        <Header dataList={this.state.dataList}/>
+        <Header dataList={this.state.dataList} fromScreen = "Home"/>
         <div className="container">
           <div style={{ textAlign: "center", marginTop: "75px" }}>
             {this.state.loader ? (<Loading loading background="#ffffff00" loaderColor="#3498db" />) : (

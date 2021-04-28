@@ -228,7 +228,7 @@ class Createassets extends React.Component {
     render() {
         return (
             <>
-                <Header />
+                <Header fromScreen = "Create"/>
                 {this.state.loader ? (<Loading loading background="#ffffff00" loaderColor="#3498db" />) : (
                     <div className={'generatenftarea'}>
                         <h1>Create your collection</h1>

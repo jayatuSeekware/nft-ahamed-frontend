@@ -2,50 +2,63 @@ import React, { useState } from 'react';
 import { useHistory } from "react-router-dom";
 import swal from 'sweetalert';
 import Logo from '../images/nlogo.jpg';
-// import Howto from './howto';
+import Select from 'react-select';
 
-var jwttoken;
 
-const people = [
-    "Siri",
-    "Alexa",
-    "Google",
-    "Facebook",
-    "Twitter",
-    "Linkedin",
-    "Sinkedin"
-  ];
+let jwttoken;
 
 function Header(props) {
     console.log("props header-----",props);
-    const [searchTerm, setSearchTerm] = React.useState("");
- const [searchResults, setSearchResults] = React.useState([]);
- const handleChange = event => {
-    setSearchTerm(event.target.value);
+    let ASSET = [];
+
+    if(props.fromScreen == "Home"){
+        for(let i=0; i< props.dataList.length;i++){
+            console.log("first value---",props.dataList[i].assetName)
+            let obj = {"label":props.dataList[i].assetName,"value":props.dataList[i].tokenId,"soldstatus":props.dataList[i].soldStatus}
+            ASSET.push(obj);
+        }
+    }
+
+
+    const handleChange = (event) => {
+     var jwttoken = sessionStorage.getItem("token")
+     console.log("event token" , event, event.soldstatus);
+      if (jwttoken) {
+
+        if(event.soldstatus == "1"){
+            swal({ title: "This NFT is Sold", icon: "error" })
+
+        }
+        else{
+            history.push({
+                pathname:  "/Detail",
+                state: {
+                 tokenID: event.value
+            } 
+             });
+        }
+    
+     } else {
+       swal({ title: "Unauthorized access! Login first", icon: "error" })
+     }
+    };
+
+    
+  const colourStyles = {
+    control: styles => ({ 
+    width:"385px",
+    // outerHeight:"390px" ,
+    backgroundColor: 'white',
+    display: 'block',
+    alignItems: 'center',
+    display: 'flex'
+})
   };
- React.useEffect(() => {
-    const results = people.filter(person =>
-      person.toLowerCase().includes(searchTerm)
-    );
-    setSearchResults(results);
-  }, [searchTerm]);
-
-
-    const resetInputField = () => {
-       // setSearchValue("")
-    }
-
-    const callSearchFunction = (e) => {
-        e.preventDefault();
-        // props.search(searchValue);
-        resetInputField();
-    }
-
 
 
     jwttoken = sessionStorage.getItem("token")
-    // console.log("inside header==========", jwttoken);
     const history = useHistory();
+
     const login = () => {
         history.push("/Signin");
     }
@@ -54,7 +67,6 @@ function Header(props) {
         window.location.reload()
     }
     const generateasset = () => {
-        // console.log("towen header", jwttoken);
         if (jwttoken) {
             history.push("/Createassets")
         } else {
@@ -64,6 +76,8 @@ function Header(props) {
 
 
     return (
+
+        
         <div className="topheader">
             <nav className="navbar navbar-expand-lg nav-custom-style fixed-top">
                 <div className="container">
@@ -72,28 +86,23 @@ function Header(props) {
                             <img src={Logo} alt="logo" />
                         </a>
                     </div>
-                    <div className="p-1 bg-light rounded rounded-pill shadow-sm search-box">
+
+                    {props.fromScreen == "Home" ? ( 
+                        <div className="p-1 bg-light rounded rounded-pill shadow-sm search-box">
                         <div className="input-group">
-                            <input type="text"
-                                placeholder="Search by collectable name"
-                                aria-describedby="button-addon1"
-                                className="form-control border-0 bg-light"
-                                value={searchTerm}
-                                onChange={handleChange} />
-
-                               
-
-                            {/* <div className="input-group-append">
-                                <button id="button-addon1" onClick={callSearchFunction} className="btn btn-link text-primary"><i className="fa fa-search"></i></button>
-                            </div> */}
-
-                            {/* <ul>
-                                        {searchResults.map(item => (
-                                        <li>{item}</li>
-                                        ))}
-                                    </ul> */}
+                            
+                        <Select
+                                        className="basic-single"
+                                        classNamePrefix="Enter NFT-Asset Name"
+                                        options={ASSET}
+                                        onChange={(selectedAsset) => handleChange(selectedAsset)}
+                                        styles={colourStyles}
+                                        
+                                    />
                         </div>
                     </div>
+                      ):(null
+                    )}
                     <ul className="nav header-menu">
                         <li className="nav-item">
                             <a className="nav-link" href="/" >Explore</a>

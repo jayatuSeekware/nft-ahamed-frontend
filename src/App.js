@@ -1,8 +1,6 @@
 import React from 'react';
 import './App.css';
 import { Route, Switch } from 'react-router-dom';
-
-
 import Home from './Components/Home'
 import Detail from './Components/Details'
 import Signup from './Components/Signup'
@@ -11,13 +9,7 @@ import Createassets from './Components/Createasset'
 import Howto from './Components/howto'
 import Admindashboard from './Components/Admin/AdminDashboard'
 
-
-
-
-
-
 function App() {
-
   return (
     <div className="App">
       <Switch>

@@ -240,7 +240,7 @@ class Details extends React.Component {
         // console.log('this.props', this.props.location.state)
         return (
             <>
-                <Header />
+                <Header fromScreen = "Detail"/>
                 <div className="container">
                     {this.state.loader ? (<Loading loading background="#ffffff00" loaderColor="#3498db" />) : (
                         <div className="singlemodaldetail">
