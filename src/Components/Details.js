@@ -186,15 +186,15 @@ class Details extends React.Component {
         var payamout = this.state.price;
         var payaddr = receiverAdd;
         var tokenid = this.state.tokenId;
-        // console.log(txhash, "hash&tokenid", tokenid);
-        const provider = new ethers.providers.JsonRpcProvider('https://rinkeby.infura.io/v3/f99366737d854f5e91ab29dad087fcd5');
+         console.log(txhash, "hash&tokenid", tokenid);
+        const provider = new ethers.providers.JsonRpcProvider('https://data-seed-prebsc-1-s1.binance.org:8545/');
 
 
 
 
 
         provider.getTransaction(txhash).then((transaction) => {
-            // console.log("transdetails", transaction.from, transaction.to);
+             console.log("transdetails", transaction.from, transaction.to);
             let paidprice = transaction.value.toString() / 1E18;
             let sendtoadd = (transaction.to).toLowerCase();
             console.log("sendtoadd", sendtoadd, this.state.ethadd)
@@ -254,7 +254,7 @@ class Details extends React.Component {
                                     <div className="detailsection">
                                         <div className="sidedetail">
                                             <h3>{this.state.assetName}</h3>
-                                            <div className="pricebox"><h3>{this.state.price}ETH</h3></div>
+                                            <div className="pricebox"><h3>{this.state.price}BNB</h3></div>
                                             <div className="descriptionbox"><p>{this.state.description}</p></div>
                                         </div>
                                         <div className="bidsection">
@@ -281,7 +281,7 @@ class Details extends React.Component {
                                     <QRCode value={this.state.ethadd} />
                                 </div>
                                 <p>{this.state.ethadd}</p>
-                                <p>Amount To Pay: {this.state.price}ETH</p>
+                                <p>Amount To Pay: {this.state.price}BNB</p>
                                 <p>Enter Your Transection Hash</p>
                                 <input type="text" placeholder="Transection Hash" onChange={this.handleHash}></input>
 

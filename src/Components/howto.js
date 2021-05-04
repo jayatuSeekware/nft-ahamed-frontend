@@ -92,7 +92,7 @@ class Howto extends React.Component {
                             <h4 className="clickable-heading">Do you have an OpenSea integration?</h4>
                         </div>
                         <div id="p7" className="collapse">
-                            <p>Yes, you can view the collectibles you have created on rarible.com on OpenSea and manage them there as well. Additionally, it is possible to list your collectibles on OpenSea not only in $ETH but also in $RARI.</p>
+                            <p>Yes, you can view the collectibles you have created on rarible.com on OpenSea and manage them there as well. Additionally, it is possible to list your collectibles on OpenSea not only in $BNB but also in $RARI.</p>
                         </div>
 
                     </div>
@@ -113,7 +113,7 @@ class Howto extends React.Component {
                             <h4 className="clickable-heading">How does the royalty system work?</h4>
                         </div>
                         <div id="p9" className="collapse">
-                            <p>Whenever you create a collectible you can set a certain percentage as royalty for secondary sales. Example: You create a digital painting and sell it for 0.2 ETH, the royalty is 10 percent. Your buyer then sells your painting at a higher price point for 0.5 ETH. Here, the royalty system kicks in. As the original content creator you receive 10% of that sale, being 0.05 ETH.</p>
+                            <p>Whenever you create a collectible you can set a certain percentage as royalty for secondary sales. Example: You create a digital painting and sell it for 0.2 BNB, the royalty is 10 percent. Your buyer then sells your painting at a higher price point for 0.5 BNB. Here, the royalty system kicks in. As the original content creator you receive 10% of that sale, being 0.05 BNB.</p>
                             <p>NB: Royalties set on OpenSea don’t carry over to rarible.com at the moment. However, the team is working on a cross-platform royalties implementation.</p>
 
                         </div>

@@ -108,8 +108,12 @@ function Header(props) {
                             <a className="nav-link" href="/" >Explore</a>
                         </li>
                         <li className="nav-item">
+                            <a className="nav-link" href="https://academy.binance.com/en/articles/connecting-metamask-to-binance-smart-chain" target="_blank">Meatmask Tutorials</a>
+                        </li>
+                        <li className="nav-item">
                             <a className="nav-link" href="/howto" target="_blank">How it works</a>
                         </li>
+
 
                     </ul>
                     <div className="collapse navbar-collapse justify-content-end navMenu">

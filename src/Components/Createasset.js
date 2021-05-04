@@ -131,10 +131,10 @@ class Createassets extends React.Component {
                         //     headers: { 'authtoken': token }
                         // };
 
-                        const newTokenID = await self.state.contract.methods.getTokenId().call()
+                        const newTokenID = await self.state.contract.methods.getCurrentTokenId().call()
 
 
-                        console.log('getTokenidresponse', newTokenID)
+                        console.log('getTokenidresponse', newTokenID  ," ipfsHash ",ipfsHash)
 
                         var tokenId = newTokenID
                         self.state.contract.methods.mint(this.state.assetName, this.state.ipfsHash).send({ from: this.state.account })
@@ -237,7 +237,7 @@ class Createassets extends React.Component {
                                 <td><input type="text" placeholder="Asset Name" value={this.state.assetName} onChange={this.handleAssetName} /></td>
                             </tr>
                             <tr>
-                                <td><input type="text" placeholder="Price in ETH" value={this.state.price} onChange={this.handlePrice} /></td>
+                                <td><input type="text" placeholder="Price in BNB" value={this.state.price} onChange={this.handlePrice} /></td>
                             </tr>
                             <tr>
                                 <td style={{ textAlign: "center" }}>
@@ -252,7 +252,17 @@ class Createassets extends React.Component {
                                 </td>
                             </tr>
                             <tr>
-                                <td><input type="text" placeholder="Description" value={this.state.description} onChange={this.handleDes} /></td>
+                                <td>
+                                    {/* <input type="textarea" placeholder="Description" value={this.state.description} onChange={this.handleDes} /> */}
+                                    <textarea
+                                        style={{width: 500}}
+                                        value={this.state.description}
+                                        onChange={this.handleDes}
+                                        placeholder="Description"
+                                        rows={5}
+                                        cols={5}
+                                        />
+                                    </td>
                             </tr>
                             <tr>
                             </tr>

@@ -1,4 +1,4 @@
 module.exports = {
-    Contract_address : "0x3b4e618445E7fba964A3501B002C84136e7E8B92",
-    Platform_address : "0x1dC1f4b7959aB8955836282E28524DE41A9975Bd"
+    Contract_address : "0x9aF44513F560Db5aed84B44E6e19e961991DF5F3",
+    Platform_address : "0xBb165CdE6A1c60a10aed6135d9295788016030B8"
 }
