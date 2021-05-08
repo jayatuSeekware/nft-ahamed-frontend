@@ -13,7 +13,6 @@ function Header(props) {
 
     if(props.fromScreen == "Home"){
         for(let i=0; i< props.dataList.length;i++){
-            console.log("first value---",props.dataList[i].assetName)
             let obj = {"label":props.dataList[i].assetName,"value":props.dataList[i].tokenId,"soldstatus":props.dataList[i].soldStatus}
             ASSET.push(obj);
         }

@@ -2,8 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import api from '../api'
 import swal from 'sweetalert';
-
-
+import LoGO from "../images/logo.png"
 
 
 
@@ -65,27 +64,43 @@ class Signin extends React.Component {
     render() {
         return (
             <>
-                <div className="main-body">
-                    <div className="container h-100 ">
-                        <div className="formContent">
-                            <h1>Login</h1>
-                            <div>
-                                <input type="text" name="login" placeholder="Enter email" value={this.state.email} onChange={this.handleEmail}></input>
+                <div className="user-screen-area">
+                    <div className="user-screen-box">
+                        <div className="user-screen-item screen-from">
+                            <div className="user-form">
+                                    <div className="nft-input-box validate-input" dataa-validate="Name is required">
+                                        <span className="label-nft-input">User Name</span>
+                                        <input className="nft-input" type="text" name="login" placeholder="Enter email" value={this.state.email} onChange={this.handleEmail}></input>
+                                        <span className="focus-nft-input"></span>
+                                    </div>
 
-                                <div className="pas-field">
-                                    <input type={this.state.hidden ? 'password' : 'text'} name="login" placeholder="Enter password" value={this.state.password} onChange={this.handlePassword}></input>
-                                    <i className="fa fa-eye" aria-hidden="true" onClick={this.toggleShow}></i>
-                                </div>
-                                <input type="submit" className="fadeIn fourth" value="Log In" onClick={this.signin}></input>
+                                    <div className="nft-input-box validate-input" data-validate="Name is required">
+                                        <span className="label-nft-input">Password</span>
+                                        <input type={this.state.hidden ? 'password' : 'text'} name="login" placeholder="Enter password" value={this.state.password} onChange={this.handlePassword}></input>
+                                        <span className="focus-nft-input"></span>
+                                        
+                                    </div>
 
+                                    <div className="nft-links-btn">
+                                        <a href="/Signup">Forgot My Password ?</a>
+                                    </div>
+
+                                    <div className="nft-links-btn">
+                                        <input type="submit" className="theme-btn" value="Log In" onClick={this.signin}></input>
+                                        <p className="theme-description text-center"> Don't have an account? <a className="underlineHover" href="/Signup">Signup</a></p>
+                                    </div>
                             </div>
-                            <div id="formFooter">
-                                <p>Don't have an account? <a className="underlineHover" href="/Signup">Signup</a></p>
+                            <div className="user-copyright">
+                                <p className="theme-description">Copyright 2021 <a href="index.html">NFT Marketplace</a> All Rights Reserved.</p>
                             </div>
-                        </div>
-
+                        </div>       
+    
+                        <div className="user-screen-item screen-bg-image text-center">
+   
+                        </div> 
                     </div>
                 </div>
+
             </>
         )
     }
@@ -93,3 +108,4 @@ class Signin extends React.Component {
 
 
 export default Signin;
+

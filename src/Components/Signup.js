@@ -52,7 +52,7 @@ class Signup extends React.Component {
         } else if (this.state.confirmPass !== this.state.password) {
             swal({ title: "Password and confirm Password don't match", icon: "error" })
         } else {
-            // console.log('signupmethod_data', this.state.username, this.state.email, this.state.password, this.state.confirmPass)
+            console.log('signupmethod_data', this.state.username, this.state.email, this.state.password, this.state.confirmPass)
             axios.post(api.API_URL + 'register', {
                 "userName": this.state.username,
                 "email": this.state.email,
@@ -78,7 +78,7 @@ class Signup extends React.Component {
     render() {
         return (
             <>
-                <div className="main-body">
+                {/* <div className="main-body">
                     <div className="container h-100 ">
 
                         <div className="formContent">
@@ -103,7 +103,54 @@ class Signup extends React.Component {
                         </div>
 
                     </div>
-                </div>
+                </div> */}
+
+                <div className="user-screen-area">
+         <div className="user-screen-box">
+            <div className="user-screen-item screen-form">
+               <div className="user-form">
+                     <div className="nft-input-box validate-input" data-validate="Name is required">
+                        <span className="label-nft-input">User Name</span>
+                        <input className="nft-input"  type="text" placeholder="User name" value={this.state.username} onChange={this.handleusername}></input>
+                        <span className="focus-nft-input"></span>
+                     </div>
+                     <div className="nft-input-box validate-input" data-validate="Name is required">
+                        <span className="label-nft-input">Email Address</span>
+                        <input className="nft-input" type="text" name="name" placeholder="name@example.com" value={this.state.email} onChange={this.handleemail}></input>
+                        <span className="focus-nft-input"></span>
+                     </div>
+                     <div className="nft-input-box validate-input" data-validate="Name is required">
+                        <span className="label-nft-input">Password</span>
+                        <input className="nft-input" type={this.state.hidden ? 'password' : 'text'} placeholder="Password" value={this.state.password} onChange={this.handlepassword}></input>
+                        <span className="focus-nft-input"></span>
+                     </div>
+                     <div className="nft-input-box validate-input" data-validate="Name is required">
+                        <span className="label-nft-input"> Confirm Password</span>
+                        <input className="nft-input" type={this.state.hidden ? 'password' : 'text'} placeholder="Confirm password" value={this.state.confirmPass} onChange={this.handleconfirmpass}></input>
+                        <span className="focus-nft-input"></span>
+                     </div>
+                     <div className="nft-links-btn" >
+                        <input className="styled-checkbox" id="styled-checkbox-1" type="checkbox" value="value1" />
+                        <label htmlFor="styled-checkbox-1"><span>I agree to the <a href="">Terms</a> and <a href="">Privacy Policy</a>.</span></label>
+                     </div>
+                     <div className="nft-links-btn">
+                        {/* <button className="theme-btn">Create Account</button> */}
+                        <input type="submit" className="theme-btn" value="Sign Up" onClick={this.signup}></input>
+
+                        <p className="theme-description text-center">Already registered <a href="/Signin">Sign In</a></p>
+                     </div>
+               </div>
+               <div className="user-copyright">
+                  <p className="theme-description">Copyright 2021 <a href="">NFT Marketplace</a> All Rights Reserved.</p>
+               </div>
+            </div>
+            <div className="user-screen-item screen-bg-image text-center">
+
+              
+            </div>
+         </div>
+      </div>
+
             </>
         )
     }
@@ -111,3 +158,4 @@ class Signup extends React.Component {
 
 
 export default Signup;
+
