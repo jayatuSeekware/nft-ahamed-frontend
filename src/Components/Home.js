@@ -247,17 +247,7 @@ class Home extends React.Component {
                                     <span>Price - High to low</span>
                                   </label>
                                 </li>
-                                <li>
-                                  <input
-                                    className="styled-checkbox"
-                                    id="styled-checkbox-14"
-                                    type="checkbox"
-                                    value="value1"
-                                  />
-                                  <label for="styled-checkbox-14">
-                                    <span>Auctions only</span>
-                                  </label>
-                                </li>
+                                
                               </ul>
                             </div>
                           </div>
