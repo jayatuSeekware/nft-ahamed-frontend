@@ -833,7 +833,7 @@ button {
     line-height: 1.6;
     margin: 0px;
     font-weight: 400;
-    margin-right: 15px;
+   
 }
 .theme-description > a {
     color: #0c5adb;
@@ -2829,7 +2829,7 @@ body .modal-backdrop.show {
     text-transform: uppercase;
     color: #0c5adb;
     font-weight: 500;
-    margin-right: 200px;
+    margin-right: 20px;
 }
 .user-form .nft-links-btn > a.theme-btn {
     color: #fff;
@@ -4158,7 +4158,7 @@ input[type="password"]{
 
 }
 .container {
-        max-width: 1240px;
+        max-width: 1220px;
 
 }
 
@@ -4298,3 +4298,22 @@ element.style {
 
 
 
+/*     'Mulish', sans-serif !important;  */
+
+
+
+.btn-disabled {
+    pointer-events: none;
+    cursor: default;
+    text-decoration: none;
+  }
+  .item-group:hover .item-group-btn .btn-disabled {
+    background-color: #FFFFFF !important;
+   border-color: #BCBCBD !important;
+    color: #B9AAAA !important;
+}
+
+.basic-single {
+    border: 1px solid #0c5adb !important;
+    padding: 10px 8px;
+}

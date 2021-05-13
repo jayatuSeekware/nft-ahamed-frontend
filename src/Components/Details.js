@@ -126,7 +126,7 @@ class Details extends React.Component {
 
   buyToken = () => {
     console.log("sds",this.state.tokenId);
-   // this.setState({ loader: true });
+    this.setState({ loader: true });
     var self = this;
     var price = this.state.price.toString();
     const { web3 } = window;
@@ -251,30 +251,15 @@ class Details extends React.Component {
     return (
       <>
         <Header fromScreen="Detail" />
-        <div className="container">
+        <div>
           {this.state.loader ? (
             <Loading loading background="#ffffff00" loaderColor="#3498db" />
+          
           ) : (
+            <div>
+            <div className="container">
             <div className="singlemodaldetail">
-              {/* <div className="row">
-                                <div className="col-sm-8">
-                                    <div className="imagesection">
-                                        <img src={api.IPFS_URL + this.state.ipfsHash} alt="" />
-                                    </div>
-                                </div>
-                                <div className="col-sm-4">
-                                    <div className="detailsection">
-                                        <div className="sidedetail">
-                                            <h3>{this.state.assetName}</h3>
-                                            <div className="pricebox"><h3>{this.state.price}BNB</h3></div>
-                                            <div className="descriptionbox"><p>{this.state.description}</p></div>
-                                        </div>
-                                        <div className="bidsection">
-                                            <button className="btn btn-primary" onClick={this.buyToken}>Buy</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> */}
+  
               <section className="browse-detail-area page-paddings">
                 <div className="container">
                   <div className="row">
@@ -360,36 +345,21 @@ class Details extends React.Component {
                   </div>
                 </div>
               </section>
+
+
+
+
+
+              </div>
+
+              
             </div>
-          )}
-          {/* 
-                    <Modal
-                        isOpen={this.state.newModel}
-                        style={customStyles}
-                        contentLabel="Example Modal"
-                        ariaHideApp={false}
-                    >
 
-                        <div className="paymentmodal">
-                            <div className="paysection">
-                                <h1>Ethereum Address</h1>
-                                <div className="qrcode-area">
-                                    <QRCode value={this.state.ethadd} />
-                                </div>
-                                <p>{this.state.ethadd}</p>
-                                <p>Amount To Pay: {this.state.price}BNB</p>
-                                <p>Enter Your Transection Hash</p>
-                                <input type="text" placeholder="Transection Hash" onChange={this.handleHash}></input>
 
-                                <div className="bidsection">
-                                    <button onClick={this.paymentMethod}>I Have Paid</button>
-                                </div>
-                            </div>
-                        </div>
-                        <button className="closemodal" onClick={this.closeModalNew}>X</button>
-                    </Modal> */}
-        </div>
-        <footer className="footer-main">
+
+
+
+            <footer className="footer-main">
           <div className="footer-top">
             <div className="container">
               <div className="row">
@@ -511,6 +481,30 @@ class Details extends React.Component {
             </div>
           </div>
         </footer>
+       
+
+
+
+
+
+            </div>
+          )}
+
+
+
+
+
+
+            
+
+
+
+            
+
+
+            </div>
+       
+      
       </>
     );
   }

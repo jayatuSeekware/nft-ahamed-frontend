@@ -66,13 +66,26 @@ class Home extends React.Component {
       perPage: 5,
       currentPage: 0,
 
+      check1: true,
 
+      sort: "",
+      products: [],
+      filteredProducts: [],
+
+      totalData: [],
+      totalDatas: [],
     };
 
-    this.handlePageClick = this
-    .handlePageClick
-    .bind(this);
+    this.handlePageClick = this.handlePageClick.bind(this);
 
+    this.handleSortCheapest = this.handleSortCheapest.bind(this);
+    this.handleSortExpensive = this.handleSortExpensive.bind(this);
+    this.handleSortNew = this.handleSortNew.bind(this);
+    this.handleSortOld = this.handleSortOld.bind(this);
+
+
+    this.handleSort = this.handleSort.bind(this);
+    this.handleSortN = this.handleSortN.bind(this);
   }
 
   async componentDidMount() {
@@ -105,35 +118,51 @@ class Home extends React.Component {
       .then((listdata) => {
         console.log("getalldatalist", listdata.data.data.length);
 
-        // const data = listdata.data;
-        // const slice = data.slice(
-        //   this.state.offset,
-        //   this.state.offset + this.state.perPage
-        // );
 
+        this.setState(
+          {
+            originalData : listdata.data.data,
+            totalitem: listdata.data.data.length,
+            totalData: listdata.data.data,
 
-        this.setState( {
-          totalitem: listdata.data.data.length,
-          dataList: listdata.data.data.slice(
-            this.state.offset,
-            this.state.offset + this.state.perPage
-          ),
+            dataList: listdata.data.data.slice(
+              this.state.offset,
+              this.state.offset + this.state.perPage
+            ),
+            // totalData: listdata.data.data,
+            // totalData:listdata.data.data.sort( (a, b) => new Date(b.createdAt) - new Date(a.createdAt)) ,
 
-          soldstatus: listdata.data.data.soldStatus,
-          pageCount: Math.ceil(listdata.data.data.length / this.state.perPage),
-        },() => {
-          console.log("this.state",this.state.offset,this.state.dataList.length,
-          (this.state.offset + this.state.perPage))
-        } );
+            //  sort : this.state.dataList.sort((a,b) => (this.state.sort === 'lowest')? (a.price < b.price?1:-1):(a.price > b.price?1:-1) ),
+
+            soldstatus: listdata.data.data.soldStatus,
+            pageCount: Math.ceil(
+              listdata.data.data.length / this.state.perPage
+            ),
+          },
+          () => {
+            console.log(
+              "this.state",
+              this.state.offset,
+              this.state.dataList.length,
+              this.state.offset + this.state.perPage
+            );
+            // console.log("is it sorting", listdata.data.data.sort((a,b) => a.createdAt > b.createdAt) )
+            console.log(
+              "dates sort",
+              listdata.data.data.sort(
+                (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+              )
+            );
+          }
+        );
       })
       .catch((errs) => {
         // console.log("alldata_api_catchblock",errs)
-
       });
   };
 
   notSoldClick = (data) => {
-    // console.log('shomodal=====', data)
+    console.log("shomodal=====", data);
     var jwttoken = sessionStorage.getItem("token");
     if (jwttoken) {
       this.props.history.push("/Detail", {
@@ -144,23 +173,124 @@ class Home extends React.Component {
     }
   };
 
+  //  toggleSortDateNew () {
+  //    const {dataList} = this.state
+  //    let newList = dataList
+  //     newList = dataList.sort((a,b) => a.createdAt < b.createdAt)
+  //     this.setState ({
+  //       dataList : newList
+  //     })
+
+  // }
+
+  handleSortCheapest = () => {
+    this.setState({
+      sortValue: this.state.dataList.sort(
+        (a, b) => parseFloat(a.price) - parseFloat(b.price)
+      ),
+    });
+  };
+
+  // Sort price high to low
+  handleSortExpensive = () => {
+    this.setState({
+      sortValue: this.state.dataList.sort(
+        (a, b) => parseFloat(b.price) - parseFloat(a.price)
+      ),
+    });
+  };
+
+  handleSort = (ascending) => {
+    this.resetPage();
+
+    let totaldata = this.state.totalData;
+    let x = ascending
+      ? this.state.totalData.sort(
+          (a, b) => parseFloat(a.price) - parseFloat(b.price)
+        )
+      : this.state.totalData.sort(
+          (a, b) => parseFloat(b.price) - parseFloat(a.price)
+        );
+    this.setState({
+      totaldata: this.state.dataList,
+      dataList: this.state.totalData.slice(
+        0,
+        this.state.perPage
+      ),
+      // totalData:this.state.totalData.sort( (a, b) => new Date(b.createdAt) - new Date(a.createdAt)) ,
+
+      pageCount: Math.ceil(this.state.totalData.length / this.state.perPage),
+    });
+  };
+
+  handleSortNew = () => {
+    this.setState({
+      sortV: this.state.totalData.sort((a, b) => a.createdAt - b.createdAt),
+    });
+  };
+
+  // Sort createdAt old
+  handleSortOld = () => {
+    this.setState({
+      sortV: this.totalData.sort((a, b) => b.createdAt - a.createdAt),
+    });
+  };
+
+  resetPage = () => {
+    this.setState({
+      currentPage:0,
+       offset:0,
+    });
+  };
+
+  handleSortN = (ascending) => {
+
+    this.resetPage();
+    let totaldata = this.state.totalData;
+
+    let y = ascending
+      ? this.state.totalData.sort(
+          (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+        )
+      : this.state.totalData.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        
+    this.setState({
+      totaldata: this.state.dataList,
+
+      dataList: this.state.totalData.slice(
+        0,
+        this.state.perPage
+      ),
+    });
+  };
 
   handlePageClick = (e) => {
     const selectedPage = e.selected;
     const offset = selectedPage * this.state.perPage;
 
-    this.setState({
+    this.setState(
+      {
         currentPage: selectedPage,
-        offset: offset
-    }, () => {
-        this.getAllData()
-    });
+        offset: offset,
+        dataList: this.state.totalData.slice(
+          offset,
+          offset + this.state.perPage
+        ),
 
-};
+      }
+      
+    );
+  };
+
+
+
+
 
 
   render() {
-    console.log("props value",this.props)
+    console.log("props value", this.props);
     return (
       <>
         <Header
@@ -168,11 +298,13 @@ class Home extends React.Component {
           dataList={this.state.dataList}
           fromScreen="Home"
         />
-        <div className="container">
+        
           <div style={{ textAlign: "center", marginTop: "75px" }}>
             {this.state.loader ? (
               <Loading loading background="#ffffff00" loaderColor="#3498db" />
             ) : (
+              <div>
+              <div className="container">
               <div className="main-body">
                 <section className="browse-product-area page-paddings">
                   <div className="container">
@@ -188,7 +320,7 @@ class Home extends React.Component {
                                     className="styled-checkbox"
                                     id="styled-checkbox-1"
                                     type="checkbox"
-                                    value="value1"
+                                    checked={this.state.check1}
                                   />
                                   <label for="styled-checkbox-1">
                                     <span>Art</span>
@@ -197,60 +329,51 @@ class Home extends React.Component {
                               </ul>
                             </div>
                           </div>
-
-                          <div className="filter-box">
-                            <h3 className="theme-title">Sort by</h3>
-                            <div className="filter-menu">
+                          
+                            <div className="filter-box">
+                              <h3 className="theme-title">Sort by</h3>
+                              <form>
                               <ul>
                                 <li>
-                                  <input
-                                    className="styled-checkbox"
-                                    id="styled-checkbox-10"
-                                    type="checkbox"
+                                  
+                                  <label><input
+                                    type="radio"
                                     value="value1"
-                                    checked=""
-                                  />
-                                  <label for="styled-checkbox-10">
-                                    <span>Newest</span>
-                                  </label>
+                                    name="mybtn"
+                                    onChange={() => this.handleSortN(false)}
+                                  />   Newest</label>
                                 </li>
                                 <li>
-                                  <input
-                                    className="styled-checkbox"
-                                    id="styled-checkbox-11"
-                                    type="checkbox"
-                                    value="value1"
-                                  />
-                                  <label for="styled-checkbox-11">
-                                    <span>Oldest</span>
-                                  </label>
+                                  
+                                  <label> <input
+                                    type="radio"
+                                    value="value2"
+                                    name="mybtn"
+                                    onChange={() => this.handleSortN(true)}
+                                  />  Oldest</label>
                                 </li>
                                 <li>
-                                  <input
-                                    className="styled-checkbox"
-                                    id="styled-checkbox-12"
-                                    type="checkbox"
-                                    value="value1"
-                                  />
-                                  <label for="styled-checkbox-12">
-                                    <span>Price - Low to high</span>
-                                  </label>
+                                  
+                                  <label> <input
+                                    type="radio"
+                                    value="value3"
+                                    name="mybtn"
+                                    onChange={() => this.handleSort(true)}
+                                  />  Price - Low to high</label>
                                 </li>
                                 <li>
-                                  <input
-                                    className="styled-checkbox"
-                                    id="styled-checkbox-13"
-                                    type="checkbox"
-                                    value="value1"
-                                  />
-                                  <label for="styled-checkbox-13">
-                                    <span>Price - High to low</span>
-                                  </label>
+                                  
+                                  <label><input
+                                    type="radio"
+                                    value="value4"
+                                    name="mybtn"
+                                    onChange={() => this.handleSort(false)}
+                                  />  Price - High to low</label>
                                 </li>
-                                
                               </ul>
+                              </form>
+
                             </div>
-                          </div>
                         </div>
                       </div>
 
@@ -282,7 +405,7 @@ class Home extends React.Component {
                                 {this.state.dataList.map((list) =>
                                   list.soldStatus === "1" ? (
                                     <div className="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12">
-                                      <div className="item-gr">
+                                    <div className="item-group">
                                         <div className="item-group-content">
                                           <div className="items-like">
                                             <i className="far fa-heart"></i>
@@ -291,7 +414,7 @@ class Home extends React.Component {
                                             <img
                                               style={{
                                                 height: 100,
-                                                width: 100,
+                                                width: 200,
                                               }}
                                               src={api.IPFS_URL + list.ipfsHash}
                                               alt=""
@@ -302,13 +425,31 @@ class Home extends React.Component {
                                               {list.assetName}
                                             </a>
                                           </h3>
+                                          
                                           <p className="theme-description">
-                                            Price <span> {list.price} BNB</span>
+                                          <h2 className="item-price text-muted">{list.price} BNB</h2>
                                           </p>
                                           <p className="theme-description">
                                             {" "}
                                             Sold{" "}
                                           </p>
+
+                                          <div className="item-group-btn">
+                                            <a
+                                              className="theme-btn btn-disabled  text-muted disabled"
+                                              onClick={() =>
+                                                this.notSoldClick(list.tokenId)
+                                              }
+                                            >
+                                              Sold Out
+                                            </a>
+                                            <a
+                                              className="item-detail-btn"
+                                              href="buy-detail.html"
+                                            >
+                                              <i className="fas fa-info-circle"></i>
+                                            </a>
+                                          </div>
                                         </div>
                                       </div>
                                     </div>
@@ -334,8 +475,9 @@ class Home extends React.Component {
                                               {list.assetName}
                                             </a>
                                           </h3>
+                                          
                                           <p className="theme-description">
-                                            Price <span> {list.price} BNB</span>
+                                          <h2 class="item-price">{list.price} BNB</h2>
                                           </p>
                                           <p className="theme-description">
                                             {" "}
@@ -383,23 +525,26 @@ class Home extends React.Component {
                   </div>
                 </section>
               </div>
-            )}
-          </div>
+              </div>
+
+
+              <div className="page">
+          <ReactPaginate
+            previousLabel={"PREV"}
+            nextLabel={"NEXT"}
+            breakLabel={"..."}
+            breakClassName={"break-me"}
+            pageCount={this.state.pageCount}
+            marginPagesDisplayed={2}
+            pageRangeDisplayed={5}
+            onPageChange={this.handlePageClick}
+            containerClassName={"pagination"}
+            subContainerClassName={"pages pagination"}
+            activeClassName={"active"}
+            forcePage={this.state.currentPage}
+            
+          />
         </div>
-        <div className="page">
-        <ReactPaginate
-                    previousLabel={"prev"}
-                    nextLabel={"next"}
-                    breakLabel={"..."}
-                    breakClassName={"break-me"}
-                    pageCount={this.state.pageCount}
-                    marginPagesDisplayed={2}
-                    pageRangeDisplayed={5}
-                    onPageChange={this.handlePageClick}
-                    containerClassName={"pagination"}
-                    subContainerClassName={"pages pagination"}
-                    activeClassName={"active"}/>
-                    </div>
 
         <footer className="footer-main">
           <div className="footer-top">
@@ -523,6 +668,17 @@ class Home extends React.Component {
             </div>
           </div>
         </footer>
+
+
+
+
+
+
+              </div>
+            )}
+          </div>
+        
+       
       </>
     );
   }

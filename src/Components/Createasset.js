@@ -293,8 +293,9 @@ class Createassets extends React.Component {
                     </div>
                 )} */}
 
+<div>
                 {this.state.loader ? (<Loading loading background="#ffffff00" loaderColor="#3498db" />) : (
-
+                  <div>
         <section class="gasless-area page-paddings">
           <div class="container">
             <div class="row">
@@ -422,12 +423,10 @@ class Createassets extends React.Component {
             </div>
           </div>
         </section>
-        )}
-
-
-
-
-
+        
+        
+        
+        
         <footer class="footer-main">
           <div class="footer-top">
             <div class="container">
@@ -558,6 +557,16 @@ class Createassets extends React.Component {
             </div>
           </div>
         </footer>
+        
+        </div>
+        )}
+        </div>
+
+
+
+
+
+        
       </>
     );
   }
