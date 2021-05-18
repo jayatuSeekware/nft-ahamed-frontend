@@ -1252,20 +1252,7 @@ button {
     left: 0;
     pointer-events: none;
 }
-.focus-nft-input::before {
-    content: "";
-    display: block;
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    -webkit-transition: all .4s;
-    -o-transition: all .4s;
-    -moz-transition: all .4s;
-    transition: all .4s;
-    background: #0c5adb;
-}
+
 .nft-input:focus+.focus-nft-input::before {
     width: 100%;
 }
@@ -2806,7 +2793,7 @@ body .modal-backdrop.show {
     width: 75%;
 }
 .user-screen-box > .user-screen-item.screen-form {
-    padding: 50px 60px 130px 60px;
+    padding: 50px 60px 130px 30px;
 }
 .user-screen-item .nft-links-btn {
     margin-top: 15px;
@@ -2829,14 +2816,14 @@ body .modal-backdrop.show {
     text-transform: uppercase;
     color: #0c5adb;
     font-weight: 500;
-    margin-right: 20px;
+    margin-left: 26px;
 }
 .user-form .nft-links-btn > a.theme-btn {
     color: #fff;
     text-align: center;
 }
 .nft-links-btn .theme-btn {
-    width: 80%;
+    width: 90%;
     margin-bottom: 15px;
     margin-right: 50px;
   
@@ -4762,7 +4749,7 @@ button {
 }
 .styled-checkbox + label:before {
     content: '';
-    margin-right: 10px;
+    margin-left: 18px;
     display: inline-block;
     vertical-align: text-top;
     width: 20px;
@@ -4792,7 +4779,7 @@ button {
     position: relative;
 }
 .nft-input-box {
-    width: 100%;
+    width: 90%;
     position: relative;
     border-bottom: 2px solid #f4f4f4;
     padding-bottom: 10px;
@@ -4838,7 +4825,7 @@ button {
     content: "";
     display: block;
     position: absolute;
-    bottom: -2px;
+    bottom: 10px;
     left: 0;
     width: 0;
     height: 2px;
@@ -5566,3 +5553,6 @@ body .modal-backdrop.show {
     }
 }
 /* keyframe css */
+
+
+

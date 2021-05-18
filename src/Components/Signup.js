@@ -2,6 +2,8 @@ import React from 'react';
 import axios from 'axios';
 import api from '../api'
 import swal from 'sweetalert';
+import LoGO from "../images/logo-white.png"
+
 
 
 
@@ -145,7 +147,9 @@ class Signup extends React.Component {
                </div>
             </div>
             <div className="user-screen-item screen-bg-image text-center">
-
+            <div className="user-logo">
+                  <a href="index.html"><img src={LoGO}/></a>
+               </div>
               
             </div>
          </div>

@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import api from '../api'
 import swal from 'sweetalert';
-import LoGO from "../images/logo.png"
+import LoGO from "../images/logo-white.png"
 
 
 
